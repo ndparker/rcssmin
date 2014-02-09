@@ -1,0 +1,17 @@
+Changes with version 1.0.2
+
+ *) Added compat option to setup.py supporting the pip installer
+
+ *) Added support for pypy (1.9, 2.0)
+
+ *) Added support for jython (2.5)
+
+
+Changes with version 1.0.1
+
+ *) Added support for Python 3.3
+
+
+Changes with version 1.0.0
+
+ *) First stable release.

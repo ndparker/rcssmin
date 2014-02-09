@@ -1,0 +1,51 @@
+Download
+~~~~~~~~
+
+Source Packages
+---------------
+
+.. begin stable
+
+Current Stable Version
+''''''''''''''''''''''
+
+- `rcssmin-@@VERSION@@.tar.lzma <http://storage.perlig.de/rcssmin/rcssmin-@@VERSION@@.tar.lzma>`_
+- `rcssmin-@@VERSION@@.tar.bz2 <http://storage.perlig.de/rcssmin/rcssmin-@@VERSION@@.tar.bz2>`_
+- `rcssmin-@@VERSION@@.tar.gz <http://storage.perlig.de/rcssmin/rcssmin-@@VERSION@@.tar.gz>`_
+- `rcssmin-@@VERSION@@.zip <http://storage.perlig.de/rcssmin/rcssmin-@@VERSION@@.zip>`_
+- `rcssmin-@@VERSION@@.digests <http://storage.perlig.de/rcssmin/rcssmin-@@VERSION@@.digests>`_
+
+.. end stable
+
+
+Integrity Check
+---------------
+
+There are hashes (MD5, SHA1 and SHA256) of the download packages stored
+in the `digests file
+<http://storage.perlig.de/rcssmin/@@PATH@@rcssmin-@@VERSION@@.digests>`_\.
+In order to check the integrity of the downloaded file, use a tool like
+md5sum (or sha1sum, sha256sum accordingly), e.g.:
+
+.. sourcecode:: console
+
+    $ md5sum -c rcssmin-@@VERSION@@.digests
+    rcssmin-@@VERSION@@.tar.bz2: OK
+    rcssmin-@@VERSION@@.tar.gz: OK
+    rcssmin-@@VERSION@@.tar.lzma: OK
+    rcssmin-@@VERSION@@.zip: OK
+
+In order to check the integrity of the digest file itself, you can check
+the PGP signature of that file. The file is signed by André Malo, Key-ID
+0x8103A37E:
+
+.. sourcecode:: console
+
+    $ gpg --verify rcssmin-@@VERSION@@.digests
+    gpg: Signature made Sun Feb 10 22:26:25 2013 CET using DSA key ID 8103A37E
+    gpg: Good signature from "Andre Malo <nd@apache.org>"
+    gpg:                 aka "Andr\xe9\x20Malo <nd@perlig.de>"
+    gpg:                 aka "Andre Malo <ndparker@gmx.net>"
+
+
+.. vim: ft=rest tw=72

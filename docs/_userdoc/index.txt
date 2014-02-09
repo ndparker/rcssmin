@@ -1,0 +1,167 @@
+.. license:
+    Copyright 2011 - 2014
+    André Malo or his licensors, as applicable
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+
+========================
+ rCSSmin - CSS Minifier
+========================
+
+|**rcssmin**| is a CSS minifier written in python.
+
+The minifier is based on the semantics of the `YUI compressor`_\, which itself
+is based on `the rule list by Isaac Schlueter`_\.
+
+This module is a re-implementation aiming for speed instead of maximum
+compression, so it can be used at runtime (rather than during a preprocessing
+step). |rcssmin| does syntactical compression only (removing spaces, comments
+and possibly semicolons). It does not provide semantic compression (like
+removing empty blocks, collapsing redundant properties etc). It does, however,
+support various CSS hacks (by keeping them working as intended).
+
+Here's a feature list:
+
+- Strings are kept, except that escaped newlines are stripped
+- Space/Comments before the very end or before various characters are
+  stripped: ``:{});=>+],!`` (The colon (``:``) is a special case, a single
+  space is kept if it's outside a ruleset.)
+- Space/Comments at the very beginning or after various characters are
+  stripped: ``{}(=:>+[,!``
+- Optional space after unicode escapes is kept, resp. replaced by a simple
+  space
+- whitespaces inside ``url()`` definitions are stripped
+- Comments starting with an exclamation mark (``!``) can be kept optionally.
+- All other comments and/or whitespace characters are replaced by a single
+  space.
+- Multiple consecutive semicolons are reduced to one
+- The last semicolon within a ruleset is stripped
+- CSS Hacks supported:
+
+  - IE7 hack (``>/**/``)
+  - Mac-IE5 hack (``/*\*/.../**/``)
+  - The boxmodelhack is supported naturally because it relies on valid CSS2
+    strings
+  - Between ``:first-line`` and the following comma or curly brace a space is
+    inserted. (apparently it's needed for IE6)
+  - Same for ``:first-letter``
+
+rcssmin.c is a reimplementation of rcssmin.py in C and improves runtime up to
+factor 50 or so (depending on the input).
+
+.. _YUI compressor: https://github.com/yui/yuicompressor/
+
+.. _the rule list by Isaac Schlueter: https://github.com/isaacs/cssmin/tree/
+
+|rcssmin| works with both python 2 (starting with python 2.4) and python 3.
+
+
+Documentation
+~~~~~~~~~~~~~
+
+A :rcssmin:`generated API documentation </>` is available. But you can
+just look into the module. It provides a simple function, called
+``cssmin`` which takes the css as a string and returns the minified
+css as a string.
+
+The module additionally provides a "streamy" interface:
+
+.. sourcecode:: console
+
+    $ python -mrcssmin <css >minified
+
+It takes two options:
+
+  -b  Keep bang-comments (Comments starting with an exclamation mark)
+  -p  Use the python implementation (not the C implementation)
+
+
+Development Status
+~~~~~~~~~~~~~~~~~~
+
+|rcssmin| is stable.
+
+
+License
+~~~~~~~
+
+|rcssmin| is available under the terms and conditions of the "Apache License,
+Version 2.0." You'll find the detailed licensing terms in the root
+directory of the source distribution package or online at
+`http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>`_.
+
+
+.. placeholder: Download
+
+
+Bugs
+~~~~
+
+No bugs, of course. ;-)
+But if you've found one or have an idea how to improve |rcssmin|, feel free
+to send a pull request on `github <https://github.com/ndparker/rcssmin>`_
+or send a mail to <rcssmin-bugs@perlig.de>.
+
+
+Author Information
+~~~~~~~~~~~~~~~~~~
+
+|rcssmin| was written and is maintained by André Malo.
+
+
+Trivia / Fun
+~~~~~~~~~~~~
+
+|rCSSmin| analyzes the CSS input using a simple regular expression, which
+looks like this:
+
+.. sourcecode:: text
+
+    pattern = (
+        r'([^\\"\047u>@\r\n\f\040\t/;:{}]+)|(?<=[{}(=:>+[,!])((?:[\r\n\f\040'
+        r'\t]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))+)|^((?:[\r\n\f\040\t]|(?:/'
+        r'\*[^*]*\*+(?:[^/*][^*]*\*+)*/))+)|((?:[\r\n\f\040\t]|(?:/\*[^*]*\*'
+        r'+(?:[^/*][^*]*\*+)*/))+)(?=(([:{});=>+\],!])|$)?)|;((?:[\r\n\f\040'
+        r'\t]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*(?:;(?:[\r\n\f\040\t]|(?:/'
+        r'\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)*)(?=(\})?)|(\{)|(\})|((?:(?:\047'
+        r'[^\047\\\r\n\f]*(?:\\[^\r\n\f][^\047\\\r\n\f]*)*\047)|(?:"[^"\\\r\n'
+        r'\f]*(?:\\[^\r\n\f][^"\\\r\n\f]*)*")))|(?<![^\000-\054\056\057\072-'
+        r'\100\133-\136\140\173-\177])url\([\r\n\f\040\t]*((?:(?:\047[^\047'
+        r'\\]*(?:\\(?:[^\r]|\r\n?)[^\047\\]*)*\047)|(?:"[^"\\]*(?:\\(?:[^\r]'
+        r'|\r\n?)[^"\\]*)*"))|(?:(?:[^\000-\040"\047()\\\177]*(?:(?:\\(?:[0-'
+        r'9a-fA-F]{1,6}(?:[\040\n\t\f]|\r\n?)?|[^\n\r\f0-9a-fA-F]))[^\000-\0'
+        r'40"\047()\\\177]*)*)(?:(?:[\r\n\f\040\t]+|(?:\\(?:[\n\f]|\r\n?))+)'
+        r'(?:(?:[^\000-\040"\047()\\\177]|(?:\\(?:[0-9a-fA-F]{1,6}(?:[\040\n'
+        r'\t\f]|\r\n?)?|[^\n\r\f0-9a-fA-F]))|(?:\\(?:[\n\f]|\r\n?)))[^\000-\0'
+        r'40"\047()\\\177]*(?:(?:\\(?:[0-9a-fA-F]{1,6}(?:[\040\n\t\f]|\r\n?)'
+        r'?|[^\n\r\f0-9a-fA-F]))[^\000-\040"\047()\\\177]*)*)+)*))[\r\n\f\04'
+        r'0\t]*\)|(@[mM][eE][dD][iI][aA])(?![^\000-\054\056\057\072-\100\133'
+        r'-\136\140\173-\177])|((?:>/\*\*/))((?:[\r\n\f\040\t]|(?:/\*[^*]*\*'
+        r'+(?:[^/*][^*]*\*+)*/))*)|(:[fF][iI][rR][sS][tT]-[lL](?:[iI][nN][eE'
+        r']|[eE][tT][tT][eE][rR]))((?:[\r\n\f\040\t]|(?:/\*[^*]*\*+(?:[^/*]['
+        r'^*]*\*+)*/))*)(?=[{,])|((?:(?:\047[^\047\\\r\n\f]*(?:\\(?:[^\r]|\r'
+        r'\n?)[^\047\\\r\n\f]*)*\047)|(?:"[^"\\\r\n\f]*(?:\\(?:[^\r]|\r\n?)['
+        r'^"\\\r\n\f]*)*")))|((?:\\(?:[0-9a-fA-F]{1,6}(?:[\040\n\t\f]|\r\n?)'
+        r'?|[^\n\r\f0-9a-fA-F]))[^\\"\047u>@\r\n\f\040\t/;:{}]*)'
+    )
+
+
+Related
+~~~~~~~
+
+- `Javascript Minifier rJSmin <http://opensource.perlig.de/rjsmin/>`_
+
+
+.. vim: ft=rest tw=72
