@@ -1,6 +1,6 @@
 Changes with version
 
- *) Added support for Python 3.4
+ *) Added support for Python 3.4 and Jython 2.7
 
 
 Changes with version 1.0.2
