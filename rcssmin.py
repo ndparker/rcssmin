@@ -1,29 +1,33 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
-#
-# Copyright 2011 - 2013
-# Andr\xe9 Malo or his licensors, as applicable
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-r"""
+"""
+:Copyright:
+
+ Copyright 2011 - 2014
+ Andr\xe9 Malo or his licensors, as applicable
+
+:License:
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
 ==============
  CSS Minifier
 ==============
 
 CSS Minifier.
 
-The minifier is based on the semantics of the `YUI compressor`_\, which itself
-is based on `the rule list by Isaac Schlueter`_\.
+The minifier is based on the semantics of the `YUI compressor`_\\, which
+itself is based on `the rule list by Isaac Schlueter`_\\.
 
 This module is a re-implementation aiming for speed instead of maximum
 compression, so it can be used at runtime (rather than during a preprocessing
@@ -51,7 +55,7 @@ Here's a feature list:
 - CSS Hacks supported:
 
   - IE7 hack (``>/**/``)
-  - Mac-IE5 hack (``/*\*/.../**/``)
+  - Mac-IE5 hack (``/*\\*/.../**/``)
   - The boxmodelhack is supported naturally because it relies on valid CSS2
     strings
   - Between ``:first-line`` and the following comma or curly brace a space is
@@ -67,6 +71,9 @@ Both python 2 (>= 2.4) and python 3 are supported.
 
 .. _the rule list by Isaac Schlueter: https://github.com/isaacs/cssmin/tree/
 """
+if 1:
+    # pylint: disable = W0622
+    __doc__ = getattr(__doc__, 'decode', lambda x: __doc__)('latin-1')
 __author__ = "Andr\xe9 Malo"
 __author__ = getattr(__author__, 'decode', lambda x: __author__)('latin-1')
 __docformat__ = "restructuredtext en"
