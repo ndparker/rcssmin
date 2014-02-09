@@ -145,10 +145,13 @@ copy_match(const rchar *pattern, const rchar *psentinel,
     rchar *target = *target_;
     rchar c;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
     while (pattern < psentinel
            && source < ctx->sentinel && target < ctx->tsentinel
            && ((c = *source++) == *pattern++))
         *target++ = c;
+#pragma GCC diagnostic pop
 
     *source_ = source;
     *target_ = target;
@@ -204,8 +207,11 @@ copy(const rchar *source, const rchar *sentinel, rchar **target_,
 {
     rchar *target = *target_;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
     while (source < sentinel && target < ctx->tsentinel)
         *target++ = *source++;
+#pragma GCC diagnostic pop
 
     *target_ = target;
 
