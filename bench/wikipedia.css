@@ -2439,7 +2439,7 @@ span.brokenref {
 }
 .hlist dd:after,
 .hlist li:after {
-    content: " · ";
+    content: " Â· ";
     font-weight: bold;
 }
 .hlist dd:last-child:after,
@@ -2614,7 +2614,7 @@ ul + table.navbox {
     text-align: right;
     width: auto;
 }
-/* In navboxes, the show/hide button balances the v·d·e links
+/* In navboxes, the show/hide button balances the vÂ·dÂ·e links
    from [[Template:Navbar]], so they need to be the same width. */
 .navbox .collapseButton {
     width: 6em;
