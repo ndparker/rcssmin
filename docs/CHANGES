@@ -1,3 +1,8 @@
+Changes with version
+
+ *) Added support for Python 3.4
+
+
 Changes with version 1.0.2
 
  *) Added compat option to setup.py supporting the pip installer
