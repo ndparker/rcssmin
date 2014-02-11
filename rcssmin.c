@@ -1,5 +1,5 @@
 /*
- * Copyright 2011
+ * Copyright 2011 - 2014
  * Andr\xe9 Malo or his licensors, as applicable
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -124,6 +124,26 @@ static const rchar pattern_supports[] = {
 static const rchar pattern_keyframes[] = {
     U('k'), U('e'), U('y'), U('f'), U('r'), U('a'), U('m'), U('e'), U('s'),
     U('K'), U('E'), U('Y'), U('F'), U('R'), U('A'), U('M'), U('E'), U('S')
+};
+
+static const rchar pattern_vendor_o[] = {
+    U('-'), U('o'), U('-'),
+    U('-'), U('O'), U('-')
+};
+
+static const rchar pattern_vendor_moz[] = {
+    U('-'), U('m'), U('o'), U('z'), U('-'),
+    U('-'), U('M'), U('O'), U('Z'), U('-')
+};
+
+static const rchar pattern_vendor_webkit[] = {
+    U('-'), U('w'), U('e'), U('b'), U('k'), U('i'), U('t'), U('-'),
+    U('-'), U('W'), U('E'), U('B'), U('K'), U('I'), U('T'), U('-')
+};
+
+static const rchar pattern_vendor_ms[] = {
+    U('-'), U('m'), U('s'), U('-'),
+    U('-'), U('M'), U('S'), U('-')
 };
 
 static const rchar pattern_first[] = {
@@ -549,15 +569,21 @@ copy_at_group(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
     target = *target_, \
     IMATCH(what, &source, &target, ctx) \
 )
+#define CMATCH(what) IMATCH(what, &source, &target, ctx)
 
-    if ((  !IMATCH(media, &source, &target, ctx)
+    if ((  !CMATCH(media)
         && !REMATCH(supports)
+        && !REMATCH(document)
         && !REMATCH(keyframes)
-        && !REMATCH(document))
+        && !(REMATCH(vendor_webkit) && CMATCH(keyframes))
+        && !(REMATCH(vendor_moz) && CMATCH(keyframes))
+        && !(REMATCH(vendor_o) && CMATCH(keyframes))
+        && !(REMATCH(vendor_ms) && CMATCH(keyframes)))
         || !(source < ctx->sentinel && target < ctx->tsentinel)
         || RCSSMIN_IS_NMCHAR(*source))
         ABORT;
 
+#undef CMATCH
 #undef REMATCH
 
     ++ctx->at_group;
