@@ -203,7 +203,7 @@ def _make_cssmin(python_only=False):
 
     def main_subber(keep_bang_comments):
         """ Make main subber """
-        in_macie5, in_rule, at_media = [0], [0], [0]
+        in_macie5, in_rule, at_group = [0], [0], [0]
 
         if keep_bang_comments:
             space_sub = space_sub_banged
@@ -245,7 +245,7 @@ def _make_cssmin(python_only=False):
         def fn_space_post(group):
             """ space with token after """
             if group(5) is None or (
-                    group(6) == ':' and not in_rule[0] and not at_media[0]):
+                    group(6) == ':' and not in_rule[0] and not at_group[0]):
                 return ' ' + space_sub(space_subber, group(4))
             return space_sub(space_subber, group(4))
 
@@ -262,8 +262,8 @@ def _make_cssmin(python_only=False):
         def fn_open(group):
             """ { handler """
             # pylint: disable = W0613
-            if at_media[0]:
-                at_media[0] -= 1
+            if at_group[0]:
+                at_group[0] -= 1
             else:
                 in_rule[0] = 1
             return '{'
@@ -274,14 +274,14 @@ def _make_cssmin(python_only=False):
             in_rule[0] = 0
             return '}'
 
-        def fn_media(group):
-            """ @media handler """
-            at_media[0] += 1
+        def fn_at_group(group):
+            """ @xxx group handler """
+            at_group[0] += 1
             return group(13)
 
         def fn_ie7hack(group):
             """ IE7 Hack handler """
-            if not in_rule[0] and not at_media[0]:
+            if not in_rule[0] and not at_group[0]:
                 in_macie5[0] = 0
                 return group(14) + space_sub(space_subber, group(15))
             return '>' + space_sub(space_subber, group(15))
@@ -301,7 +301,7 @@ def _make_cssmin(python_only=False):
             lambda g: g(11),                    # string
             lambda g: 'url(%s)' % uri_space_sub(uri_space_subber, g(12)),
                                                 # url(...)
-            fn_media,                           # @media
+            fn_at_group,                        # @xxx expecting {...}
             None,
             fn_ie7hack,                         # ie7hack
             None,
