@@ -1,5 +1,8 @@
 Changes with version
 
+ *) Added support for the following grouping @-rules:
+    @supports, @document, @keyframes
+
  *) Added support for Python 3.4 and Jython 2.7
 
 
