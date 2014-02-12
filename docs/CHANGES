@@ -1,4 +1,4 @@
-Changes with version
+Changes with version 1.0.3
 
  *) Added support for the following grouping @-rules:
     @supports, @document, @keyframes

@@ -78,7 +78,7 @@ __author__ = "Andr\xe9 Malo"
 __author__ = getattr(__author__, 'decode', lambda x: __author__)('latin-1')
 __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
-__version__ = '1.0.2'
+__version__ = '1.0.3'
 __all__ = ['cssmin']
 
 import re as _re
