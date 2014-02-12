@@ -22,7 +22,8 @@
 
 Run tests.
 """
-__author__ = u"Andr\xe9 Malo"
+__author__ = "Andr\xe9 Malo"
+__author__ = getattr(__author__, 'decode', lambda x: __author__)('latin-1')
 __docformat__ = "restructuredtext en"
 
 import os as _os
