@@ -95,92 +95,9 @@ class Test(Target):
     DEPS = ["compile-quiet"]
 
     def run(self):
-        run_output_tests(self.dirs['tests'])
-
-
-def run_output_tests(basedir):
-    """ Run output based tests """
-    import rcssmin as _rcssmin
-    py_cssmin = _rcssmin._make_cssmin(python_only=True)
-    c_cssmin = _rcssmin._make_cssmin(python_only=False)
-
-    def run_test(example, output_file):
-        """ Run it """
-        try:
-            fp = open(example, 'r')
-        except IOError:
-            return
-        else:
-            try:
-                input = fp.read()
-            finally:
-                fp.close()
-
-        def load_output(filename):
-            try:
-                fp = open(filename, 'r')
-            except IOError:
-                return None
-            else:
-                try:
-                    output = fp.read()
-                finally:
-                    fp.close()
-            output = output.strip()
-            if _re.search(r'(?<!\\)(?:\\\\)*\\[0-9a-zA-Z]{1,6}$', output):
-                output += ' '
-            return output
-
-        output = load_output(output_file)
-        output_b = load_output(output_file + '.b')
-
-        def do_test(cssmin, output, **options):
-            try:
-                genout = cssmin(input, **options)
-            except (KeyboardInterrupt, SystemExit):
-                raise
-            except:
-                return "%(RED)s exc%(NORMAL)s "
-            else:
-                if output is None:
-                    return "%(RED)smiss%(NORMAL)s "
-                elif genout == output or genout == output.rstrip():
-                    return "%(GREEN)sOK%(NORMAL)s   "
-                else:
-                    return "%(RED)sfail%(NORMAL)s "
-
-        out = do_test(py_cssmin, output)
-        c_out = do_test(c_cssmin, output)
-        out_b = do_test(py_cssmin, output_b, keep_bang_comments=True)
-        c_out_b = do_test(c_cssmin, output_b, keep_bang_comments=True)
-
-        term.write(
-            "%(out)s %(out_b)s  |  %(c_out)s %(c_out_b)s - %%(example)s\n"
-                % locals(),
-            example=_os.path.basename(example),
-        )
-
-    # end
-    # begin main test code
-
-    basedir = shell.native(basedir)
-    strip = len(basedir) - len(_os.path.basename(basedir))
-    for dirname, dirs, files in shell.walk(basedir):
-        dirs[:] = [item for item in dirs if item not in ('.svn', 'out')]
-        dirs.sort()
-        files = [item for item in files if item.endswith('.css')]
-        if not files:
-            continue
-        if not _os.path.isdir(_os.path.join(basedir, dirname, 'out')):
-            continue
-        term.yellow("---> %s" % (dirname[strip:],))
-        files.sort()
-        for filename in files:
-            run_test(
-                _os.path.join(dirname, filename),
-                _os.path.join(dirname, 'out', filename[:-4] + '.out'),
-            )
-        term.yellow("<--- %s" % (dirname[strip:],))
+        if shell.spawn(_sys.executable, 'run_tests.py',
+            self.dirs['tests'], self.dirs['lib']
+        ): raise RuntimeError('tests failed')
 
 
 class Benchmark(Target):
