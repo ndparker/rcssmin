@@ -9,7 +9,7 @@ Source Packages
 Current Stable Version
 ''''''''''''''''''''''
 
-- `rcssmin-1.0.2.tar.lzma <http://storage.perlig.de/rcssmin/rcssmin-1.0.2.tar.lzma>`_
+- `rcssmin-1.0.2.tar.xz <http://storage.perlig.de/rcssmin/rcssmin-1.0.2.tar.xz>`_
 - `rcssmin-1.0.2.tar.bz2 <http://storage.perlig.de/rcssmin/rcssmin-1.0.2.tar.bz2>`_
 - `rcssmin-1.0.2.tar.gz <http://storage.perlig.de/rcssmin/rcssmin-1.0.2.tar.gz>`_
 - `rcssmin-1.0.2.zip <http://storage.perlig.de/rcssmin/rcssmin-1.0.2.zip>`_
@@ -32,7 +32,7 @@ md5sum (or sha1sum, sha256sum accordingly), e.g.:
     $ md5sum -c rcssmin-1.0.2.digests
     rcssmin-1.0.2.tar.bz2: OK
     rcssmin-1.0.2.tar.gz: OK
-    rcssmin-1.0.2.tar.lzma: OK
+    rcssmin-1.0.2.tar.xz: OK
     rcssmin-1.0.2.zip: OK
 
 In order to check the integrity of the digest file itself, you can check
