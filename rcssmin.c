@@ -172,6 +172,8 @@ static const rchar pattern_macie5_exit[] = {
 /*
  * Match a pattern (and copy immediately to target)
  */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
 static int
 copy_match(const rchar *pattern, const rchar *psentinel,
            const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
@@ -180,19 +182,17 @@ copy_match(const rchar *pattern, const rchar *psentinel,
     rchar *target = *target_;
     rchar c;
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-overflow"
     while (pattern < psentinel
            && source < ctx->sentinel && target < ctx->tsentinel
            && ((c = *source++) == *pattern++))
         *target++ = c;
-#pragma GCC diagnostic pop
 
     *source_ = source;
     *target_ = target;
 
     return (pattern == psentinel);
 }
+#pragma GCC diagnostic pop
 
 #define MATCH(PAT, source, target, ctx) (                              \
     copy_match(pattern_##PAT,                                          \
@@ -236,22 +236,22 @@ copy_imatch(const rchar *pattern, const rchar *psentinel,
 /*
  * Copy characters
  */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
 static int
 copy(const rchar *source, const rchar *sentinel, rchar **target_,
      rcssmin_ctx_t *ctx)
 {
     rchar *target = *target_;
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-overflow"
     while (source < sentinel && target < ctx->tsentinel)
         *target++ = *source++;
-#pragma GCC diagnostic pop
 
     *target_ = target;
 
     return (source == sentinel);
 }
+#pragma GCC diagnostic pop
 
 #define COPY_PAT(PAT, target, ctx) (                             \
     copy(pattern_##PAT,                                          \
