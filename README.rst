@@ -62,7 +62,7 @@ factor 50 or so (depending on the input).
 
 .. _YUI compressor: https://github.com/yui/yuicompressor/
 
-.. _the rule list by Isaac Schlueter: https://github.com/isaacs/cssmin/tree/
+.. _the rule list by Isaac Schlueter: https://github.com/isaacs/cssmin/
 
 
 COPYRIGHT AND LICENSE

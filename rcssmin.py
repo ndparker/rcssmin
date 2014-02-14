@@ -69,7 +69,7 @@ Both python 2 (>= 2.4) and python 3 are supported.
 
 .. _YUI compressor: https://github.com/yui/yuicompressor/
 
-.. _the rule list by Isaac Schlueter: https://github.com/isaacs/cssmin/tree/
+.. _the rule list by Isaac Schlueter: https://github.com/isaacs/cssmin/
 """
 if 1:
     # pylint: disable = W0622
