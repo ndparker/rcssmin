@@ -1,6 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
-"""
+r"""
+==============
+ CSS Minifier
+==============
+
+CSS Minifier.
+
+The minifier is based on the semantics of the `YUI compressor`_\\, which
+itself is based on `the rule list by Isaac Schlueter`_\\.
+
 :Copyright:
 
  Copyright 2011 - 2014
@@ -19,15 +28,6 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
-
-==============
- CSS Minifier
-==============
-
-CSS Minifier.
-
-The minifier is based on the semantics of the `YUI compressor`_\\, which
-itself is based on `the rule list by Isaac Schlueter`_\\.
 
 This module is a re-implementation aiming for speed instead of maximum
 compression, so it can be used at runtime (rather than during a preprocessing
@@ -71,11 +71,8 @@ Both python 2 (>= 2.4) and python 3 are supported.
 
 .. _the rule list by Isaac Schlueter: https://github.com/isaacs/cssmin/
 """
-if 1:
-    # pylint: disable = W0622
-    __doc__ = getattr(__doc__, 'decode', lambda x: __doc__)('latin-1')
-__author__ = "Andr\xe9 Malo"
-__author__ = getattr(__author__, 'decode', lambda x: __author__)('latin-1')
+__doc__ = __doc__.encode('ascii').decode('unicode_escape') # pylint: disable = W0622, C0301
+__author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
 __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
 __version__ = '1.0.3'
