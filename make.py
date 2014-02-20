@@ -114,7 +114,7 @@ class Benchmark(Target):
             python = shell.frompath(self.python)
         return not shell.spawn(*[
             python,
-            shell.native('bench.py'),
+            '-mbench.main',
             '-c10'
         ] + files)
 
@@ -126,24 +126,6 @@ class Benchmark(Target):
             shell.rm(filename)
         for filename in shell.files('.', '*$py.class'):
             shell.rm(filename)
-
-
-class Benchmark2(Benchmark):
-    """ Benchmark """
-    NAME = "bench2"
-    python = "python2"
-
-    def clean(self, scm, dist):
-        pass
-
-
-class Benchmark3(Benchmark):
-    """ Benchmark """
-    NAME = "bench3"
-    python = "python3"
-
-    def clean(self, scm, dist):
-        pass
 
 
 class Compile(Target):
