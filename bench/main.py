@@ -1,36 +1,41 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
-#
-# Copyright 2011
-# Andr\xe9 Malo or his licensors, as applicable
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-"""
+r"""
 =================================
  Benchmark cssmin implementations
 =================================
 
 Benchmark cssmin implementations.
 
+:Copyright:
+
+ Copyright 2011 - 2014
+ Andr\xe9 Malo or his licensors, as applicable
+
+:License:
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
 Usage::
 
-    bench.py [-c COUNT] cssfile ...
+    python -mbench.main [-c COUNT] cssfile ...
 
     -c COUNT  number of runs per cssfile and minifier. Defaults to 10.
 
 """
-__author__ = "Andr\xe9 Malo"
-__author__ = getattr(__author__, 'decode', lambda x: __author__)('latin-1')
+if __doc__:
+    __doc__ = __doc__.encode('ascii').decode('unicode_escape')
+__author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
 __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
 __version__ = "1.0.0"
@@ -102,7 +107,6 @@ def bench(filenames, count):
     ports = [item for item in dir(cssmins) if item.startswith('p_')]
     ports.sort()
     ports = [(item[5:], getattr(cssmins, item).cssmin) for item in ports]
-    counted = [None for _ in xrange(count)]
     flush = _sys.stdout.flush
 
     inputs = [(filename, slurp(filename)) for filename in filenames]
@@ -127,11 +131,21 @@ def bench(filenames, count):
         for name, cssmin in ports:
             print_("  Timing %s..." % name, end=" ")
             flush()
-            start = _time.time()
-            for _ in counted:
-                cssmin(script)
-            end = _time.time()
-            times.append((end - start) * 1000 / count)
+
+            xcount = count
+            while True:
+                counted = [None for _ in xrange(xcount)]
+                start = _time.time()
+                for _ in counted:
+                    cssmin(script)
+                end = _time.time()
+                result = (end - start) * 1000
+                if result < 10: # avoid measuring within the error range
+                    xcount *= 10
+                    continue
+                times.append(result / xcount)
+                break
+
             print_("%.2f ms" % times[-1], end=" ")
             flush()
             if len(times) <= 1:
@@ -144,8 +158,10 @@ def bench(filenames, count):
         print_()
 
 
-def main(argv):
+def main(argv=None):
     """ Main """
+    if argv is None:
+        argv = _sys.argv[1:]
     count, idx = 10, 0
     if argv and argv[0] == '-c':
         count, idx = int(argv[1]), 2
@@ -155,4 +171,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    main(_sys.argv[1:])
+    main()
