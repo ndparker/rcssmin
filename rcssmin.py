@@ -71,7 +71,9 @@ Both python 2 (>= 2.4) and python 3 are supported.
 
 .. _the rule list by Isaac Schlueter: https://github.com/isaacs/cssmin/
 """
-__doc__ = __doc__.encode('ascii').decode('unicode_escape') # pylint: disable = W0622, C0301
+if __doc__:
+    # pylint: disable = W0622
+    __doc__ = __doc__.encode('ascii').decode('unicode_escape')
 __author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
 __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
