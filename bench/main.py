@@ -109,17 +109,18 @@ def bench(filenames, count):
     ports = [(item[5:], getattr(cssmins, item).cssmin) for item in ports]
     flush = _sys.stdout.flush
 
+    struct = []
     inputs = [(filename, slurp(filename)) for filename in filenames]
-    for filename, script in inputs:
+    for filename, style in inputs:
         print_("Benchmarking %r..." % filename, end=" ")
         flush()
-        outputs = [cssmin(script) for _, cssmin in ports]
+        outputs = [cssmin(style) for _, cssmin in ports]
         failed = []
         for idx in xrange(1, len(outputs)):
             if outputs[idx] != outputs[0]:
                 failed.append(ports[idx][0])
         print_("(%.1f KiB -> %.1f KiB)" % (
-            len(script) / 1024.0, len(outputs[0]) / 1024.0,
+            len(style) / 1024.0, len(outputs[0]) / 1024.0,
         ))
         if failed:
             for item in failed:
@@ -128,6 +129,7 @@ def bench(filenames, count):
             print_("  ok   - Output identical")
         flush()
         times = []
+        struct.append(dict(filename=filename, times=[]))
         for name, cssmin in ports:
             print_("  Timing %s..." % name, end=" ")
             flush()
@@ -137,7 +139,7 @@ def bench(filenames, count):
                 counted = [None for _ in xrange(xcount)]
                 start = _time.time()
                 for _ in counted:
-                    cssmin(script)
+                    cssmin(style)
                 end = _time.time()
                 result = (end - start) * 1000
                 if result < 10: # avoid measuring within the error range
@@ -155,19 +157,52 @@ def bench(filenames, count):
                     '%.2f' % (timed / times[-1]) for timed in times[:-1]
                 ])))
             flush()
+            struct[-1]['times'].append((name, times[-1]))
+
         print_()
+
+    return struct
 
 
 def main(argv=None):
     """ Main """
+    import getopt as _getopt
+    import os as _os
+    import pickle as _pickle
+
     if argv is None:
         argv = _sys.argv[1:]
-    count, idx = 10, 0
-    if argv and argv[0] == '-c':
-        count, idx = int(argv[1]), 2
-    elif argv and argv[0].startswith('-c'):
-        count, idx = int(argv[0][2:]), 1
-    bench(argv[idx:], count)
+    try:
+        opts, args = _getopt.getopt(argv, "hc:p:", ["help"])
+    except getopt.GetoptError:
+        e = _sys.exc_info()[0](_sys.exc_info()[1])
+        print >> _sys.stderr, "%s\nTry %s -mbench.main --help" % (
+            e,
+            _os.path.basename(_sys.executable),
+        )
+        _sys.exit(2)
+
+    count, pickle = 10, None
+    for key, value in opts:
+        if key in ("-h", "--help"):
+            print >> _sys.stderr, (
+                "%s -mbench.main [-c count] [-p file] cssfile ..." % (
+                    _os.path.basename(_sys.executable),
+                )
+            )
+            _sys.exit(0)
+        elif key == '-c':
+            count = int(value)
+        elif key == '-p':
+            pickle = str(value)
+
+    struct = bench(args, count)
+    if pickle:
+        fp = open(pickle, 'wb')
+        try:
+            fp.write(_pickle.dumps(struct))
+        finally:
+            fp.close()
 
 
 if __name__ == '__main__':
