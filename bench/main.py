@@ -200,7 +200,9 @@ def main(argv=None):
     if pickle:
         fp = open(pickle, 'wb')
         try:
-            fp.write(_pickle.dumps(struct))
+            fp.write(_pickle.dumps((
+                ".".join(map(str, _sys.version_info[:3])), struct
+            ), 0))
         finally:
             fp.close()
 
