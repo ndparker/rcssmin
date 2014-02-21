@@ -63,7 +63,8 @@ Here's a feature list:
   - Same for ``:first-letter``
 
 rcssmin.c is a reimplementation of rcssmin.py in C and improves runtime up to
-factor 50 or so (depending on the input).
+factor 100 or so (depending on the input). docs/BENCHMARKS in the source
+distribution contains the details.
 
 Both python 2 (>= 2.4) and python 3 are supported.
 
