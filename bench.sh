@@ -21,3 +21,4 @@ done
 
 python -mbench.write -p docs/BENCHMARKS <"$out"
 
+python make.py makefile
