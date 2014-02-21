@@ -115,21 +115,26 @@ def bench(filenames, count):
         print_("Benchmarking %r..." % filename, end=" ")
         flush()
         outputs = [cssmin(style) for _, cssmin in ports]
+        struct.append(dict(filename=filename, messages=[], times=[]))
         failed = []
         for idx in xrange(1, len(outputs)):
             if outputs[idx] != outputs[0]:
                 failed.append(ports[idx][0])
-        print_("(%.1f KiB -> %.1f KiB)" % (
+        struct[-1]['messages'].append("(%.1f KiB -> %.1f KiB)" % (
             len(style) / 1024.0, len(outputs[0]) / 1024.0,
         ))
+        print_(struct[-1]['messages'][-1])
         if failed:
             for item in failed:
-                print_("  NOTE - Output of %r differs" % (item,))
+                struct[-1]['messages'].append(
+                    "  NOTE - Output of %r differs" % (item,)
+                )
+                print_(struct[-1]['messages'][-1])
         else:
-            print_("  ok   - Output identical")
+            struct[-1]['messages'].append("  ok   - Output identical")
+            print_(struct[-1]['messages'][-1])
         flush()
         times = []
-        struct.append(dict(filename=filename, times=[]))
         for name, cssmin in ports:
             print_("  Timing %s..." % name, end=" ")
             flush()
