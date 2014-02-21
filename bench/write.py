@@ -46,7 +46,6 @@ import sys as _sys
 def write_plain(filename, results):
     """
     Output plain benchmark results
-    Benchmark the minifiers with given css samples
 
     :Parameters:
       `filename` : ``str``
