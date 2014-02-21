@@ -28,9 +28,10 @@ Benchmark cssmin implementations.
 
 Usage::
 
-    python -mbench.main [-c COUNT] cssfile ...
+    python -mbench.main [-c COUNT] [-p file] cssfile ...
 
     -c COUNT  number of runs per cssfile and minifier. Defaults to 10.
+    -p file   File to write the benchmark results in (pickled)
 
 """
 if __doc__:
