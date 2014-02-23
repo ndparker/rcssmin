@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
 r"""
-=================================
+==================================
  Benchmark cssmin implementations
-=================================
+==================================
 
 Benchmark cssmin implementations.
 
@@ -44,6 +44,7 @@ __version__ = "1.0.0"
 import sys as _sys
 import time as _time
 
+import_notes = []
 class _p_02__rcssmin(object):
     def __init__(self):
         import rcssmin
@@ -62,7 +63,8 @@ class cssmins(object):
     try:
         p_03__rcssmin = _p_03__rcssmin()
     except ImportError:
-        print("C-Port not available")
+        import_notes.append("_rcssmin (C-Port) not available")
+        print(import_notes[-1])
 
 print("Python Release: %s" % ".".join(map(str, _sys.version_info[:3])))
 print("")
@@ -104,9 +106,14 @@ def bench(filenames, count):
         xrange
     except NameError:
         xrange = range
+    try:
+        cmp
+    except NameError:
+        cmp = lambda a, b: (a > b) - (a < b)
 
     ports = [item for item in dir(cssmins) if item.startswith('p_')]
     ports.sort()
+    space = max(map(len, ports)) - 4
     ports = [(item[5:], getattr(cssmins, item).cssmin) for item in ports]
     flush = _sys.stdout.flush
 
@@ -115,56 +122,66 @@ def bench(filenames, count):
     for filename, style in inputs:
         print_("Benchmarking %r..." % filename, end=" ")
         flush()
-        outputs = [cssmin(style) for _, cssmin in ports]
-        struct.append(dict(filename=filename, messages=[], times=[]))
-        failed = []
-        for idx in xrange(1, len(outputs)):
-            if outputs[idx] != outputs[0]:
-                failed.append(ports[idx][0])
-        struct[-1]['messages'].append("(%.1f KiB -> %.1f KiB)" % (
-            len(style) / 1024.0, len(outputs[0]) / 1024.0,
+        outputs = []
+        for _, cssmin in ports:
+            try:
+                outputs.append(cssmin(style))
+            except (SystemExit, KeyboardInterrupt):
+                raise
+            except:
+                outputs.append(None)
+        struct.append(dict(
+            filename=filename,
+            sizes=[
+                (item is not None and len(item) or None) for item in outputs
+            ],
+            size=len(style),
+            messages=[],
+            times=[],
         ))
-        print_(struct[-1]['messages'][-1])
-        if failed:
-            for item in failed:
-                struct[-1]['messages'].append(
-                    "  NOTE - Output of %r differs" % (item,)
-                )
-                print_(struct[-1]['messages'][-1])
-        else:
-            struct[-1]['messages'].append("  ok   - Output identical")
-            print_(struct[-1]['messages'][-1])
+        print_("(%.1f KiB)" % (struct[-1]['size'] / 1024.0,))
         flush()
         times = []
-        for name, cssmin in ports:
-            print_("  Timing %s..." % name, end=" ")
-            flush()
-
-            xcount = count
-            while True:
-                counted = [None for _ in xrange(xcount)]
-                start = _time.time()
-                for _ in counted:
-                    cssmin(style)
-                end = _time.time()
-                result = (end - start) * 1000
-                if result < 10: # avoid measuring within the error range
-                    xcount *= 10
-                    continue
-                times.append(result / xcount)
-                break
-
-            print_("%.2f ms" % times[-1], end=" ")
-            flush()
-            if len(times) <= 1:
-                print_()
+        for idx, (name, cssmin) in enumerate(ports):
+            if outputs[idx] is None:
+                print_("  FAILED %s" % (name,))
+                struct[-1]['times'].append((name, None))
             else:
-                print_("(factor: %s)" % (', '.join([
-                    '%.2f' % (timed / times[-1]) for timed in times[:-1]
-                ])))
-            flush()
-            struct[-1]['times'].append((name, times[-1]))
+                print_("  Timing %s%s... (%5.1f KiB %s)" % (
+                    name,
+                    " " * (space - len(name)),
+                    len(outputs[idx]) / 1024.0,
+                    idx == 0 and '*' or ['=', '>', '<'][
+                        cmp(len(outputs[idx]), len(outputs[0]))
+                    ],
+                ), end=" ")
+                flush()
 
+                xcount = count
+                while True:
+                    counted = [None for _ in xrange(xcount)]
+                    start = _time.time()
+                    for _ in counted:
+                        cssmin(style)
+                    end = _time.time()
+                    result = (end - start) * 1000
+                    if result < 10: # avoid measuring within the error range
+                        xcount *= 10
+                        continue
+                    times.append(result / xcount)
+                    break
+
+                print_("%8.2f ms" % times[-1], end=" ")
+                flush()
+                if len(times) <= 1:
+                    print_()
+                else:
+                    print_("(factor: %s)" % (', '.join([
+                        '%.2f' % (timed / times[-1]) for timed in times[:-1]
+                    ])))
+                struct[-1]['times'].append((name, times[-1]))
+
+            flush()
         print_()
 
     return struct
@@ -207,7 +224,9 @@ def main(argv=None):
         fp = open(pickle, 'wb')
         try:
             fp.write(_pickle.dumps((
-                ".".join(map(str, _sys.version_info[:3])), struct
+                ".".join(map(str, _sys.version_info[:3])),
+                import_notes,
+                struct,
             ), 0))
         finally:
             fp.close()
