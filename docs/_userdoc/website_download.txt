@@ -9,11 +9,11 @@ Source Packages
 Current Stable Version
 ''''''''''''''''''''''
 
-- `rcssmin-1.0.3.tar.xz <http://storage.perlig.de/rcssmin/rcssmin-1.0.3.tar.xz>`_
-- `rcssmin-1.0.3.tar.bz2 <http://storage.perlig.de/rcssmin/rcssmin-1.0.3.tar.bz2>`_
-- `rcssmin-1.0.3.tar.gz <http://storage.perlig.de/rcssmin/rcssmin-1.0.3.tar.gz>`_
-- `rcssmin-1.0.3.zip <http://storage.perlig.de/rcssmin/rcssmin-1.0.3.zip>`_
-- `rcssmin-1.0.3.digests <http://storage.perlig.de/rcssmin/rcssmin-1.0.3.digests>`_
+- `rcssmin-1.0.4.tar.xz <http://storage.perlig.de/rcssmin/rcssmin-1.0.4.tar.xz>`_
+- `rcssmin-1.0.4.tar.bz2 <http://storage.perlig.de/rcssmin/rcssmin-1.0.4.tar.bz2>`_
+- `rcssmin-1.0.4.tar.gz <http://storage.perlig.de/rcssmin/rcssmin-1.0.4.tar.gz>`_
+- `rcssmin-1.0.4.zip <http://storage.perlig.de/rcssmin/rcssmin-1.0.4.zip>`_
+- `rcssmin-1.0.4.digests <http://storage.perlig.de/rcssmin/rcssmin-1.0.4.digests>`_
 
 .. end stable
 
@@ -23,17 +23,17 @@ Integrity Check
 
 There are hashes (MD5, SHA1 and SHA256) of the download packages stored
 in the `digests file
-<http://storage.perlig.de/rcssmin/rcssmin-1.0.3.digests>`_\.
+<http://storage.perlig.de/rcssmin/rcssmin-1.0.4.digests>`_\.
 In order to check the integrity of the downloaded file, use a tool like
 md5sum (or sha1sum, sha256sum accordingly), e.g.:
 
 .. sourcecode:: console
 
-    $ md5sum -c rcssmin-1.0.3.digests
-    rcssmin-1.0.3.tar.bz2: OK
-    rcssmin-1.0.3.tar.gz: OK
-    rcssmin-1.0.3.tar.xz: OK
-    rcssmin-1.0.3.zip: OK
+    $ md5sum -c rcssmin-1.0.4.digests
+    rcssmin-1.0.4.tar.bz2: OK
+    rcssmin-1.0.4.tar.gz: OK
+    rcssmin-1.0.4.tar.xz: OK
+    rcssmin-1.0.4.zip: OK
 
 In order to check the integrity of the digest file itself, you can check
 the PGP signature of that file. The file is signed by André Malo, Key-ID
@@ -41,7 +41,7 @@ the PGP signature of that file. The file is signed by André Malo, Key-ID
 
 .. sourcecode:: console
 
-    $ gpg --verify rcssmin-1.0.3.digests
+    $ gpg --verify rcssmin-1.0.4.digests
     gpg: Signature made Thu Feb 13 21:14:47 2014 CET using DSA key ID 8103A37E
     gpg: Good signature from "Andre Malo <nd@apache.org>"
     gpg:                 aka "Andr\xe9\x20Malo <nd@perlig.de>"
