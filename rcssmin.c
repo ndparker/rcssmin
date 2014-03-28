@@ -172,8 +172,10 @@ static const rchar pattern_macie5_exit[] = {
 /*
  * Match a pattern (and copy immediately to target)
  */
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-overflow"
+#endif
 static int
 copy_match(const rchar *pattern, const rchar *psentinel,
            const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
@@ -192,7 +194,9 @@ copy_match(const rchar *pattern, const rchar *psentinel,
 
     return (pattern == psentinel);
 }
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
 #pragma GCC diagnostic pop
+#endif
 
 #define MATCH(PAT, source, target, ctx) (                              \
     copy_match(pattern_##PAT,                                          \
@@ -236,8 +240,10 @@ copy_imatch(const rchar *pattern, const rchar *psentinel,
 /*
  * Copy characters
  */
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-overflow"
+#endif
 static int
 copy(const rchar *source, const rchar *sentinel, rchar **target_,
      rcssmin_ctx_t *ctx)
@@ -251,7 +257,9 @@ copy(const rchar *source, const rchar *sentinel, rchar **target_,
 
     return (source == sentinel);
 }
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
 #pragma GCC diagnostic pop
+#endif
 
 #define COPY_PAT(PAT, target, ctx) (                             \
     copy(pattern_##PAT,                                          \
