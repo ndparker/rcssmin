@@ -96,11 +96,7 @@ def _make_cssmin(python_only=False):
     :Return: Minifier
     :Rtype: ``callable``
     """
-    # pylint: disable = W0612
-    # ("unused" variables)
-
-    # pylint: disable = R0911, R0912, R0914, R0915
-    # (too many anything)
+    # pylint: disable = R0912, R0914, W0612
 
     if not python_only:
         try:
@@ -110,7 +106,7 @@ def _make_cssmin(python_only=False):
         else:
             return _rcssmin.cssmin
 
-    nl = r'(?:[\n\f]|\r\n?)' # pylint: disable = C0103
+    nl = r'(?:[\n\f]|\r\n?)'  # pylint: disable = C0103
     spacechar = r'[\r\n\f\040\t]'
 
     unicoded = r'[0-9a-fA-F]{1,6}(?:[\040\n\t\f]|\r\n?)?'
@@ -149,6 +145,7 @@ def _make_cssmin(python_only=False):
     ie7hack = r'(?:>/\*\*/)'
 
     uri = (r'(?:'
+        # noqa pylint: disable = C0330
         r'(?:[^\000-\040"\047()\\\177]*'
             r'(?:%(escape)s[^\000-\040"\047()\\\177]*)*)'
         r'(?:'
@@ -178,6 +175,7 @@ def _make_cssmin(python_only=False):
     post_esc_sub = _re.compile(r'[\r\n\f\t]+').sub
 
     main_sub = _re.compile((
+        # noqa pylint: disable = C0330
         r'([^\\"\047u>@\r\n\f\040\t/;:{}]+)'
         r'|(?<=[{}(=:>+[,!])(%(space)s+)'
         r'|^(%(space)s+)'
@@ -215,6 +213,7 @@ def _make_cssmin(python_only=False):
 
         if keep_bang_comments:
             space_sub = space_sub_banged
+
             def space_subber(match):
                 """ Space|Comment subber """
                 if match.lastindex:
@@ -237,6 +236,7 @@ def _make_cssmin(python_only=False):
                 return ''
         else:
             space_sub = space_sub_simple
+
             def space_subber(match):
                 """ Space|Comment subber """
                 if match.lastindex:
@@ -267,18 +267,16 @@ def _make_cssmin(python_only=False):
                 return space_sub(space_subber, group(7))
             return ';' + space_sub(space_subber, group(7))
 
-        def fn_open(group):
+        def fn_open(_):
             """ { handler """
-            # pylint: disable = W0613
             if at_group[0]:
                 at_group[0] -= 1
             else:
                 in_rule[0] = 1
             return '{'
 
-        def fn_close(group):
+        def fn_close(_):
             """ } handler """
-            # pylint: disable = W0613
             in_rule[0] = 0
             return '}'
 
@@ -295,30 +293,31 @@ def _make_cssmin(python_only=False):
             return '>' + space_sub(space_subber, group(15))
 
         table = (
+            # noqa pylint: disable = C0330
             None,
             None,
             None,
             None,
-            fn_space_post,                      # space with token after
-            fn_space_post,                      # space with token after
-            fn_space_post,                      # space with token after
-            fn_semicolon,                       # semicolon
-            fn_semicolon2,                      # semicolon
-            fn_open,                            # {
-            fn_close,                           # }
-            lambda g: g(11),                    # string
+            fn_space_post,                       # space with token after
+            fn_space_post,                       # space with token after
+            fn_space_post,                       # space with token after
+            fn_semicolon,                        # semicolon
+            fn_semicolon2,                       # semicolon
+            fn_open,                             # {
+            fn_close,                            # }
+            lambda g: g(11),                     # string
             lambda g: 'url(%s)' % uri_space_sub(uri_space_subber, g(12)),
-                                                # url(...)
-            fn_at_group,                        # @xxx expecting {...}
+                                                 # url(...)
+            fn_at_group,                         # @xxx expecting {...}
             None,
-            fn_ie7hack,                         # ie7hack
+            fn_ie7hack,                          # ie7hack
             None,
             lambda g: g(16) + ' ' + space_sub(space_subber, g(17)),
-                                                # :first-line|letter followed
-                                                # by [{,] (apparently space
-                                                # needed for IE6)
-            lambda g: nl_unesc_sub('', g(18)),  # nl_string
-            lambda g: post_esc_sub(' ', g(19)), # escape
+                                                 # :first-line|letter followed
+                                                 # by [{,] (apparently space
+                                                 # needed for IE6)
+            lambda g: nl_unesc_sub('', g(18)),   # nl_string
+            lambda g: post_esc_sub(' ', g(19)),  # escape
         )
 
         def func(match):
@@ -335,7 +334,7 @@ def _make_cssmin(python_only=False):
 
         return func
 
-    def cssmin(style, keep_bang_comments=False): # pylint: disable = W0621
+    def cssmin(style, keep_bang_comments=False):  # pylint: disable = W0621
         """
         Minify CSS.
 
@@ -367,7 +366,7 @@ if __name__ == '__main__':
         )
         if '-p' in _sys.argv[1:] or '-bp' in _sys.argv[1:] \
                 or '-pb' in _sys.argv[1:]:
-            global cssmin # pylint: disable = W0603
+            global cssmin  # pylint: disable = W0603
             cssmin = _make_cssmin(python_only=True)
         _sys.stdout.write(cssmin(
             _sys.stdin.read(), keep_bang_comments=keep_bang_comments
