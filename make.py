@@ -131,7 +131,7 @@ class Check(Target):
     def run(self):
         from _setup.dev import analysis
         term.green('Linting rcssmin sources...')
-        res = analysis.pylint('_pkg/pylint.conf', 'rcssmin')
+        res = analysis.pylint('pylintrc', 'rcssmin')
         if res == 2:
             make.warn('pylint not found', self.NAME)
 
