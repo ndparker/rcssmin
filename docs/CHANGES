@@ -1,3 +1,13 @@
+Changes with version
+
+ *) Updated benchmarks
+
+ *) Relint with newer pylint
+
+ *) Fix locale problem with the setup script on python3.
+    Submitted by https://github.com/svenstaro
+
+
 Changes with version 1.0.4
 
  *) Documentation and benchmark updates
