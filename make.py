@@ -38,9 +38,9 @@ from _setup.make import targets, default_targets
 
 
 if _sys.version_info[0] == 3:
-    def textopen(*args):
-        return open(*args, encoding='utf-8')
     cfgread = dict(encoding='utf-8')
+    def textopen(*args):
+        return open(*args, **cfgread)
 else:
     textopen = open
     cfgread = {}
