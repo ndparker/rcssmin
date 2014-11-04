@@ -26,7 +26,6 @@ __author__ = "Andr\xe9 Malo"
 __author__ = getattr(__author__, 'decode', lambda x: __author__)('latin-1')
 __docformat__ = "restructuredtext en"
 
-import errno as _errno
 import os as _os
 import re as _re
 import sys as _sys
@@ -36,6 +35,15 @@ from _setup import shell
 from _setup import make
 from _setup import term
 from _setup.make import targets, default_targets
+
+
+if _sys.version_info[0] == 3:
+    def textopen(*args):
+        return open(*args, encoding='utf-8')
+    cfgread = dict(encoding='utf-8')
+else:
+    textopen = open
+    cfgread = {}
 
 
 class Target(make.Target):
@@ -76,19 +84,6 @@ class Distribution(targets.Distribution):
         self._changes = 'docs/CHANGES'
 
 
-class Check(Target):
-    """ Check the python code """
-    NAME = "check"
-    DEPS = ["compile-quiet"]
-
-    def run(self):
-        from _setup.dev import analysis
-        term.green('Linting rcssmin sources...')
-        res = analysis.pylint('_pkg/pylint.conf', 'rcssmin')
-        if res == 2:
-            make.warn('pylint not found', self.NAME)
-
-
 class Test(Target):
     """ Run the system tests """
     NAME = "test"
@@ -115,7 +110,7 @@ class Benchmark(Target):
         return not shell.spawn(*[
             python,
             '-mbench.main',
-            '-c10'
+            '-c10',
         ] + files)
 
     def clean(self, scm, dist):
@@ -126,6 +121,19 @@ class Benchmark(Target):
             shell.rm(filename)
         for filename in shell.files('.', '*$py.class'):
             shell.rm(filename)
+
+
+class Check(Target):
+    """ Check the python code """
+    NAME = "check"
+    DEPS = ["compile-quiet"]
+
+    def run(self):
+        from _setup.dev import analysis
+        term.green('Linting rcssmin sources...')
+        res = analysis.pylint('_pkg/pylint.conf', 'rcssmin')
+        if res == 2:
+            make.warn('pylint not found', self.NAME)
 
 
 class Compile(Target):
@@ -250,7 +258,7 @@ class Website(Target):
     def run(self):
         from _setup.util import SafeConfigParser as parser
         parser = parser()
-        parser.read('package.cfg')
+        parser.read('package.cfg', **cfgread)
         strversion = parser.get('package', 'version.number')
         shortversion = tuple(map(int, strversion.split('.')[:2]))
 
@@ -265,19 +273,19 @@ class Website(Target):
         filename = _os.path.join(
             self.dirs['_website'], 'src', 'website_download.txt'
         )
-        fp = open(filename)
+        fp = textopen(filename)
         try:
             download = fp.read()
         finally:
             fp.close()
         filename = _os.path.join(self.dirs['_website'], 'src', 'index.txt')
-        fp = open(filename)
+        fp = textopen(filename)
         try:
             indexlines = fp.readlines()
         finally:
             fp.close()
 
-        fp = open(filename, 'w')
+        fp = textopen(filename, 'w')
         try:
             for line in indexlines:
                 if line.startswith('.. placeholder: Download'):
@@ -296,7 +304,7 @@ class Website(Target):
                 self.dirs['_website'], 'src', 'doc-%d.%d' % shortversion
             )
         )
-        fp = open(_os.path.join(
+        fp = textopen(_os.path.join(
             self.dirs['_website'], 'src', 'conf.py'
         ), 'a')
         try:
@@ -348,7 +356,7 @@ class SVNRelease(Target):
         """ Tag release """
         from _setup.util import SafeConfigParser as parser
         parser = parser()
-        parser.read('package.cfg')
+        parser.read('package.cfg', **cfgread)
         strversion = parser.get('package', 'version.number')
         version = strversion
         trunk_url = self._repo_url()
@@ -426,7 +434,7 @@ class GitRelease(Target):
         """ Tag release """
         from _setup.util import SafeConfigParser as parser
         parser = parser()
-        parser.read('package.cfg')
+        parser.read('package.cfg', **cfgread)
         strversion = parser.get('package', 'version.number')
         version = strversion
         git = shell.frompath('git')
@@ -482,7 +490,7 @@ class Version(Target):
     def run(self):
         from _setup.util import SafeConfigParser as parser
         parser = parser()
-        parser.read('package.cfg')
+        parser.read('package.cfg', **cfgread)
         strversion = parser.get('package', 'version.number')
 
         self._version_init(strversion)
@@ -500,12 +508,12 @@ class Version(Target):
     def _version_init(self, strversion):
         """ Modify version in __init__ """
         filename = _os.path.join(self.dirs['lib'], 'rcssmin.py')
-        fp = open(filename)
+        fp = textopen(filename)
         try:
             initlines = fp.readlines()
         finally:
             fp.close()
-        fp = open(filename, 'w')
+        fp = textopen(filename, 'w')
         replaced = False
         try:
             for line in initlines:
@@ -520,12 +528,12 @@ class Version(Target):
     def _version_changes(self, strversion):
         """ Modify version in changes """
         filename = _os.path.join(shell.native(self.dirs['docs']), 'CHANGES')
-        fp = open(filename)
+        fp = textopen(filename)
         try:
             initlines = fp.readlines()
         finally:
             fp.close()
-        fp = open(filename, 'w')
+        fp = textopen(filename, 'w')
         try:
             for line in initlines:
                 if line.rstrip() == "Changes with version":
@@ -539,13 +547,13 @@ class Version(Target):
         filename = _os.path.join(self.dirs['userdoc_source'], 'conf.py')
         shortversion = '.'.join(strversion.split('.')[:2])
         longversion = strversion
-        fp = open(filename)
+        fp = textopen(filename)
         try:
             initlines = fp.readlines()
         finally:
             fp.close()
         replaced = 0
-        fp = open(filename, 'w')
+        fp = textopen(filename, 'w')
         try:
             for line in initlines:
                 if line.startswith('version'):
@@ -565,13 +573,13 @@ class Version(Target):
             self.dirs['userdoc_source'], 'website_download.txt'
         )
         VERSION, PATH = strversion, ''
-        fp = open(filename + '.in')
+        fp = textopen(filename + '.in')
         try:
             dllines = fp.readlines()
         finally:
             fp.close()
         instable = []
-        fp = open(filename, 'w')
+        fp = textopen(filename, 'w')
         try:
             for line in dllines:
                 if instable:
