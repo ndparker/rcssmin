@@ -176,19 +176,19 @@ def _make_cssmin(python_only=False):
 
     main_sub = _re.compile((
         # noqa pylint: disable = C0330
-        r'([^\\"\047u>@\r\n\f\040\t/;:{}]+)'
-        r'|(?<=[{}(=:>+[,!])(%(space)s+)'
-        r'|^(%(space)s+)'
-        r'|(%(space)s+)(?=(([:{});=>+\],!])|$)?)'
-        r'|;(%(space)s*(?:;%(space)s*)*)(?=(\})?)'
-        r'|(\{)'
-        r'|(\})'
-        r'|(%(strings)s)'
-        r'|(?<!%(nmchar)s)url\(%(spacechar)s*('
+        r'([^\\"\047u>@\r\n\f\040\t/;:{}+]+)'             # 1
+        r'|(?<=[{}(=:>[,!])(%(space)s+)'                  # 2
+        r'|^(%(space)s+)'                                 # 3
+        r'|(%(space)s+)(?=(([:{});=>\],!])|$)?)'          # 4, 5, 6
+        r'|;(%(space)s*(?:;%(space)s*)*)(?=(\})?)'        # 7, 8
+        r'|(\{)'                                          # 9
+        r'|(\})'                                          # 10
+        r'|(%(strings)s)'                                 # 11
+        r'|(?<!%(nmchar)s)url\(%(spacechar)s*('           # 12
                 r'%(uri_nl_strings)s'
                 r'|%(uri)s'
             r')%(spacechar)s*\)'
-        r'|(@(?:'
+        r'|(@(?:'                                         # 13
               r'[mM][eE][dD][iI][aA]'
               r'|[sS][uU][pP][pP][oO][rR][tT][sS]'
               r'|[dD][oO][cC][uU][mM][eE][nN][tT]'
@@ -197,12 +197,12 @@ def _make_cssmin(python_only=False):
                 r')-)?'
                 r'[kK][eE][yY][fF][rR][aA][mM][eE][sS]'
             r'))(?!%(nmchar)s)'
-        r'|(%(ie7hack)s)(%(space)s*)'
-        r'|(:[fF][iI][rR][sS][tT]-[lL]'
+        r'|(%(ie7hack)s)(%(space)s*)'                     # 14, 15
+        r'|(:[fF][iI][rR][sS][tT]-[lL]'                   # 16
             r'(?:[iI][nN][eE]|[eE][tT][tT][eE][rR]))'
-            r'(%(space)s*)(?=[{,])'
-        r'|(%(nl_strings)s)'
-        r'|(%(escape)s[^\\"\047u>@\r\n\f\040\t/;:{}]*)'
+            r'(%(space)s*)(?=[{,])'                       # 17
+        r'|(%(nl_strings)s)'                              # 18
+        r'|(%(escape)s[^\\"\047u>@\r\n\f\040\t/;:{}+]*)'  # 19
     ) % locals()).sub
 
     # print main_sub.__self__.pattern
