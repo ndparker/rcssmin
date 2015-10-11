@@ -12,7 +12,7 @@ itself is based on `the rule list by Isaac Schlueter`_\\.
 
 :Copyright:
 
- Copyright 2011 - 2014
+ Copyright 2011 - 2015
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -40,10 +40,10 @@ Here's a feature list:
 
 - Strings are kept, except that escaped newlines are stripped
 - Space/Comments before the very end or before various characters are
-  stripped: ``:{});=>+],!`` (The colon (``:``) is a special case, a single
+  stripped: ``:{});=>],!`` (The colon (``:``) is a special case, a single
   space is kept if it's outside a ruleset.)
 - Space/Comments at the very beginning or after various characters are
-  stripped: ``{}(=:>+[,!``
+  stripped: ``{}(=:>[,!``
 - Optional space after unicode escapes is kept, resp. replaced by a simple
   space
 - whitespaces inside ``url()`` definitions are stripped

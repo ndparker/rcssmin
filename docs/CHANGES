@@ -1,5 +1,11 @@
 Changes with version
 
+ *) Fix minification of calc() calls. (Issue #1)
+
+ *) Benchmark updates
+
+ *) Lift max restrictions for CPython and Jython as well.
+
  *) Lift max restrictions for pypy versions. Added pypy3 support.
 
 
