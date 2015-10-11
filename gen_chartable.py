@@ -1,4 +1,36 @@
 #!/usr/bin/env python
+r"""
+=========================================
+ Character table generator for rcssmin.c
+=========================================
+
+ Character table generator for rcssmin.c
+
+:Copyright:
+
+ Copyright 2011 - 2015
+ Andr\xe9 Malo or his licensors, as applicable
+
+:License:
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+"""
+if __doc__:
+    # pylint: disable = W0622
+    __doc__ = __doc__.encode('ascii').decode('unicode_escape')
+__author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
+__docformat__ = "restructuredtext en"
+__license__ = "Apache License, Version 2.0"
 
 import re as _re
 
@@ -8,21 +40,25 @@ static const unsigned short rcssmin_charmask[128] = {
 };
 """.strip() + "\n"
 
+
 def _make_charmask():
-    dull = r'[^\\"\047u>@\r\n\f\040\t/;:{}]'
+    """ Generate character mask table """
+    # pylint: disable = too-many-branches
+
+    dull = r'[^\\"\047u>@\r\n\f\040\t/;:{}+]'
     hexchar = r'[0-9a-fA-F]'
     escaped = r'[^\n\r\f0-9a-fA-F]'
     space = r'[\040\t\r\n\f]'
     string_dull = r'[^"\047\\\r\n\f]'
     nmchar = r'[^\000-\054\056\057\072-\100\133-\136\140\173-\177]'
     uri_dull = r'[^\000-\040"\047()\\\177]'
-    pre_char = r'[{}(=:>+[,!]'
-    post_char = r'[:{});=>+\],!]'
+    pre_char = r'[{}(=:>[,!]'
+    post_char = r'[:{});=>\],!]'
 
     charmask = []
-    for x in range(8):
+    for x in range(8):  # pylint: disable = invalid-name
         maskline = []
-        for y in range(16):
+        for y in range(16):  # pylint: disable = invalid-name
             c, mask = chr(x*16 + y), 0
             if _re.match(dull, c):
                 mask |= 1
