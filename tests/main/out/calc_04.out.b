@@ -1,0 +1,3 @@
+/*! Found this example by searching github for 'calc(' :-)
+ * https://github.com/marcelotorres/experiencing-transition-and-the-calc-CSS3/blob/master/style.css
+ */.mtlab1-wrap{margin:60px auto 0 auto;overflow:hidden;background-color:#f0f0f0;border:2px solid #fff;width:-webkit-calc((74px * 6) + 330px);width:-moz-calc((74px * 6) + 330px);width:-o-calc((74px * 6) + 330px);width:calc((74px * 6) + 330px)}
