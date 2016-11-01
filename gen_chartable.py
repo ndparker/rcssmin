@@ -4,7 +4,7 @@ r"""
  Character table generator for rcssmin.c
 =========================================
 
- Character table generator for rcssmin.c
+Character table generator for rcssmin.c
 
 :Copyright:
 
