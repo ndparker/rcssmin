@@ -18,7 +18,7 @@
 
 import sys as _sys
 from _setup import run
-
+from setuptools import setup
 
 def setup(args=None, _manifest=0):
     """ Main setup function """
