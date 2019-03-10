@@ -1,0 +1,15 @@
+include cext.h
+include rcssmin.c rcssmin.py
+
+include README.md LICENSE
+recursive-include bench *
+
+prune tasks
+
+recursive-include docs *
+prune docs/userdoc
+prune docs/coverage
+prune docs/gcov
+prune docs/_userdoc/_build/
+exclude docs/_userdoc/website_download*
+exclude docs/DEVELOPMENT.md

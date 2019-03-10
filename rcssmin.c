@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 - 2015
+ * Copyright 2011 - 2019
  * Andr\xe9 Malo or his licensors, as applicable
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,9 @@ EXT_INIT_FUNC;
 typedef Py_UNICODE rchar;
 #else
 typedef unsigned char rchar;
+#endif
+#ifdef U
+#undef U
 #endif
 #define U(c) ((rchar)(c))
 
@@ -1037,6 +1040,9 @@ Minify CSS.\n\
   `style` : ``str``\n\
     CSS to minify\n\
 \n\
+  `keep_bang_comments` : ``bool``\n\
+    Keep comments starting with an exclamation mark? (``/*!...*/``)\n\
+\n\
 :Return: Minified style\n\
 :Rtype: ``str``");
 
@@ -1049,15 +1055,14 @@ rcssmin_cssmin(PyObject *self, PyObject *args, PyObject *kwds)
     int keep_bang_comments;
 #ifdef EXT2
     int uni;
-#define UOBJ "O"
 #endif
 #ifdef EXT3
-#define UOBJ "U"
+    int bytes;
 #endif
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, UOBJ "|O", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|O", kwlist,
                                      &style, &keep_bang_comments_))
-        return NULL;
+        LCOV_EXCL_LINE_RETURN(NULL);
 
     if (!keep_bang_comments_)
         keep_bang_comments = 0;
@@ -1070,18 +1075,35 @@ rcssmin_cssmin(PyObject *self, PyObject *args, PyObject *kwds)
 #ifdef EXT2
     if (PyUnicode_Check(style)) {
         if (!(style = PyUnicode_AsUTF8String(style)))
-            return NULL;
+            LCOV_EXCL_LINE_RETURN(NULL);
         uni = 1;
+    }
+    else if (!PyString_Check(style)) {
+        PyErr_SetString(PyExc_TypeError, "Unexpected type");
+        return NULL;
     }
     else {
         if (!(style = PyObject_Str(style)))
-            return NULL;
+            LCOV_EXCL_LINE_RETURN(NULL);
         uni = 0;
     }
 #endif
 
 #ifdef EXT3
-    Py_INCREF(style);
+    if (PyBytes_Check(style) || PyByteArray_Check(style)) {
+        bytes = 1;
+        if (!(style = PyUnicode_FromEncodedObject(style,
+                                                  "latin-1", "strict")))
+            LCOV_EXCL_LINE_RETURN(NULL);
+    }
+    else if (PyUnicode_Check(style)) {
+        bytes = 0;
+        Py_INCREF(style);
+    }
+    else {
+        PyErr_SetString(PyExc_TypeError, "Unexpected type");
+        return NULL;
+    }
 #define PyString_GET_SIZE PyUnicode_GET_SIZE
 #define PyString_AS_STRING PyUnicode_AS_UNICODE
 #define _PyString_Resize PyUnicode_Resize
@@ -1092,8 +1114,12 @@ rcssmin_cssmin(PyObject *self, PyObject *args, PyObject *kwds)
 
 again:
     if (!(result = PyString_FromStringAndSize(NULL, rlength))) {
+        /* LCOV_EXCL_START */
+
         Py_DECREF(style);
         return NULL;
+
+        /* LCOV_EXCL_STOP */
     }
     Py_BEGIN_ALLOW_THREADS
     length = rcssmin((rchar *)PyString_AS_STRING(style),
@@ -1109,22 +1135,33 @@ again:
 
     Py_DECREF(style);
     if (length < 0) {
+        /* LCOV_EXCL_START */
+
         Py_DECREF(result);
         return NULL;
-    }
+
+        /* LCOV_EXCL_STOP */
+}
     if (length != rlength && _PyString_Resize(&result, length) == -1)
-        return NULL;
+        LCOV_EXCL_LINE_RETURN(NULL);
 
 #ifdef EXT2
     if (uni) {
         style = PyUnicode_DecodeUTF8(PyString_AS_STRING(result),
                                      PyString_GET_SIZE(result), "strict");
         Py_DECREF(result);
-        if (!style)
-            return NULL;
-        result = style;
+        return style;
     }
 #endif
+
+#ifdef EXT3
+    if (bytes) {
+        style = PyUnicode_AsEncodedString(result, "latin-1", "strict");
+        Py_DECREF(result);
+        return style;
+    }
+#endif
+
     return result;
 }
 
@@ -1132,7 +1169,7 @@ again:
 
 EXT_METHODS = {
     {"cssmin",
-        (PyCFunction)rcssmin_cssmin, METH_VARARGS | METH_KEYWORDS,
+        EXT_CFUNC(rcssmin_cssmin), METH_VARARGS | METH_KEYWORDS,
         rcssmin_cssmin__doc__},
 
     {NULL}  /* Sentinel */
@@ -1152,10 +1189,11 @@ EXT_INIT_FUNC {
 
     /* Create the module and populate stuff */
     if (!(m = EXT_CREATE(&EXT_DEFINE_VAR)))
-        EXT_INIT_ERROR(NULL);
+        EXT_INIT_ERROR(LCOV_EXCL_LINE(NULL));
 
     EXT_ADD_UNICODE(m, "__author__", "Andr\xe9 Malo", "latin-1");
     EXT_ADD_STRING(m, "__docformat__", "restructuredtext en");
+    EXT_ADD_STRING(m, "__version__", STRINGIFY(EXT_VERSION));
 
     EXT_INIT_RETURN(m);
 }

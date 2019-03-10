@@ -1,5 +1,5 @@
 # -*- coding: ascii -*-
-r"""
+u"""
 =================================
  Benchmark cssmin implementations
 =================================
@@ -8,7 +8,7 @@ Benchmark cssmin implementations.
 
 :Copyright:
 
- Copyright 2011 - 2015
+ Copyright 2011 - 2019
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -26,5 +26,3 @@ Benchmark cssmin implementations.
  limitations under the License.
 
 """
-if __doc__:
-    __doc__ = __doc__.encode('ascii').decode('unicode_escape')

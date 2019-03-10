@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: ascii -*-
-r"""
+u"""
 ==============
  CSS Minifier
 ==============
@@ -12,7 +12,7 @@ itself is based on `the rule list by Isaac Schlueter`_\\.
 
 :Copyright:
 
- Copyright 2011 - 2015
+ Copyright 2011 - 2019
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -66,16 +66,13 @@ rcssmin.c is a reimplementation of rcssmin.py in C and improves runtime up to
 factor 100 or so (depending on the input). docs/BENCHMARKS in the source
 distribution contains the details.
 
-Both python 2 (>= 2.4) and python 3 are supported.
+Supported python versions are 2.7 and 3.4+.
 
 .. _YUI compressor: https://github.com/yui/yuicompressor/
 
 .. _the rule list by Isaac Schlueter: https://github.com/isaacs/cssmin/
 """
-if __doc__:
-    # pylint: disable = W0622
-    __doc__ = __doc__.encode('ascii').decode('unicode_escape')
-__author__ = r"Andr\xe9 Malo".encode('ascii').decode('unicode_escape')
+__author__ = u"Andr\xe9 Malo"
 __docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
 __version__ = '1.0.6'
@@ -96,7 +93,7 @@ def _make_cssmin(python_only=False):
     :Return: Minifier
     :Rtype: ``callable``
     """
-    # pylint: disable = R0912, R0914, W0612
+    # pylint: disable = too-many-locals
 
     if not python_only:
         try:
@@ -104,9 +101,11 @@ def _make_cssmin(python_only=False):
         except ImportError:
             pass
         else:
-            return _rcssmin.cssmin
+            # Ensure that the C version is in sync
+            if getattr(_rcssmin, '__version__', None) == __version__:
+                return _rcssmin.cssmin
 
-    nl = r'(?:[\n\f]|\r\n?)'  # pylint: disable = C0103
+    nl = r'(?:[\n\f]|\r\n?)'  # pylint: disable = invalid-name
     spacechar = r'[\r\n\f\040\t]'
 
     unicoded = r'[0-9a-fA-F]{1,6}(?:[\040\n\t\f]|\r\n?)?'
@@ -144,8 +143,11 @@ def _make_cssmin(python_only=False):
 
     ie7hack = r'(?:>/\*\*/)'
 
-    uri = (r'(?:'
-        # noqa pylint: disable = C0330
+    uri = (
+        # noqa pylint: disable = bad-continuation
+
+        r'(?:'
+
         r'(?:[^\000-\040"\047()\\\177]*'
             r'(?:%(escape)s[^\000-\040"\047()\\\177]*)*)'
         r'(?:'
@@ -156,7 +158,9 @@ def _make_cssmin(python_only=False):
                 r'(?:%(escape)s[^\000-\040"\047()\\\177]*)*'
             r')+'
         r')*'
-    r')') % locals()
+
+        r')'
+    ) % locals()
 
     nl_unesc_sub = _re.compile(nl_escaped).sub
 
@@ -175,7 +179,8 @@ def _make_cssmin(python_only=False):
     post_esc_sub = _re.compile(r'[\r\n\f\t]+').sub
 
     main_sub = _re.compile((
-        # noqa pylint: disable = C0330
+        # noqa pylint: disable = bad-continuation
+
         r'([^\\"\047u>@\r\n\f\040\t/;:{}+]+)'             # 1
         r'|(?<=[{}(=:>[,!])(%(space)s+)'                  # 2
         r'|^(%(space)s+)'                                 # 3
@@ -205,7 +210,7 @@ def _make_cssmin(python_only=False):
         r'|(%(escape)s[^\\"\047u>@\r\n\f\040\t/;:{}+]*)'  # 19
     ) % locals()).sub
 
-    # print main_sub.__self__.pattern
+    # print(main_sub.__self__.pattern)
 
     def main_subber(keep_bang_comments):
         """ Make main subber """
@@ -224,15 +229,15 @@ def _make_cssmin(python_only=False):
                         else:
                             in_macie5[0] = 0
                         return group1
-                    elif group1:
-                        if group1.endswith(r'\*/'):
-                            if in_macie5[0]:
-                                return ''
-                            in_macie5[0] = 1
-                            return r'/*\*/'
-                        elif in_macie5[0]:
-                            in_macie5[0] = 0
-                            return '/**/'
+
+                    if group1.endswith(r'\*/'):
+                        if in_macie5[0]:
+                            return ''
+                        in_macie5[0] = 1
+                        return r'/*\*/'
+                    elif in_macie5[0]:
+                        in_macie5[0] = 0
+                        return '/**/'
                 return ''
         else:
             space_sub = space_sub_simple
@@ -293,7 +298,8 @@ def _make_cssmin(python_only=False):
             return '>' + space_sub(space_subber, group(15))
 
         table = (
-            # noqa pylint: disable = C0330
+            # noqa pylint: disable = bad-continuation
+
             None,
             None,
             None,
@@ -334,7 +340,7 @@ def _make_cssmin(python_only=False):
 
         return func
 
-    def cssmin(style, keep_bang_comments=False):  # pylint: disable = W0621
+    def cssmin(style, keep_bang_comments=False):
         """
         Minify CSS.
 
@@ -348,17 +354,39 @@ def _make_cssmin(python_only=False):
         :Return: Minified style
         :Rtype: ``str``
         """
-        return main_sub(main_subber(keep_bang_comments), style)
+        # pylint: disable = redefined-outer-name
+
+        is_bytes, style = _as_str(style)
+        style = main_sub(main_subber(keep_bang_comments), style)
+        if is_bytes:
+            return style.encode('latin-1')
+        return style
 
     return cssmin
 
 cssmin = _make_cssmin()
 
 
+def _as_str(style):
+    """ Make sure the style is a text string """
+    is_bytes = False
+    if str is bytes:
+        if not isinstance(style, basestring):  # noqa pylint: disable = undefined-variable
+            raise TypeError("Unexpected type")
+    elif isinstance(style, (bytes, bytearray)):
+        is_bytes = True
+        style = style.decode('latin-1')
+    elif not isinstance(style, str):
+        raise TypeError("Unexpected type")
+
+    return is_bytes, style
+
+
 if __name__ == '__main__':
     def main():
         """ Main """
         import sys as _sys
+
         keep_bang_comments = (
             '-b' in _sys.argv[1:]
             or '-bp' in _sys.argv[1:]
@@ -366,9 +394,11 @@ if __name__ == '__main__':
         )
         if '-p' in _sys.argv[1:] or '-bp' in _sys.argv[1:] \
                 or '-pb' in _sys.argv[1:]:
-            global cssmin  # pylint: disable = W0603
-            cssmin = _make_cssmin(python_only=True)
-        _sys.stdout.write(cssmin(
+            xcssmin = _make_cssmin(python_only=True)
+        else:
+            xcssmin = cssmin
+        _sys.stdout.write(xcssmin(
             _sys.stdin.read(), keep_bang_comments=keep_bang_comments
         ))
+
     main()

@@ -1,0 +1,118 @@
+.. copyright:
+    Copyright 2011 - 2019
+    André Malo or his licensors, as applicable
+
+.. license:
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+:orphan:
+
+
+=====================
+ rCSSmin - Benchmark
+=====================
+
+.. contents::
+    :local:
+
+
+The following numbers have been measured with the bench package provided
+in the source distribution. Since the numbers don't vary much between
+python minor releases (e.g. 3.3 vs 3.4), only one benchmark per major
+version is given below. The :file:`docs/BENCHMARKS` file in the source
+distribution contains a more comprehensive list.
+
+Here's the list of benchmarked implementations:
+
+**YUI Port**
+  YUI port by Zachary Voase
+
+|**rcssmin**|
+  this very project
+
+**_**\ |**rcssmin**|
+  The C reimplementation of |rcssmin|
+
+And here's a list of the benchmarked CSS files:
+
+- wikipedia.css / wikipedia.min.css
+- bootstrap.css / bootstrap.min.css (3.4.1)
+
+Inside the parentheses are size information in KiB [#]_\.  The sign
+behind the size value denotes the size difference in relation to the
+YUI port (i.e. cssmin).
+
+.. [#] Bytes / 1024 for Python 2 and Code Points / 1024 for Python 3
+
+
+.. begin tables
+
+Python 3.7.2
+~~~~~~~~~~~~
+
+.. rst-class:: benchmark
+
++--------------+------------------------+-----------------------+
+| Name         | bootstrap (142.5)      | bootstrap.min (118.6) |
++==============+========================+=======================+
+| YUI Port     |  1124.60 ms (118.8 \*) |  987.98 ms (118.5 \*) |
++--------------+------------------------+-----------------------+
+| |rcssmin|    |    29.46 ms (119.2 >)  |   13.58 ms (118.6 >)  |
++--------------+------------------------+-----------------------+
+| _\ |rcssmin| |     0.40 ms (119.2 >)  |    0.28 ms (118.6 >)  |
++--------------+------------------------+-----------------------+
+
+.. rst-class:: benchmark
+
++--------------+------------------------+-----------------------+
+| Name         | wikipedia (81.0)       | wikipedia.min (49.4)  |
++==============+========================+=======================+
+| YUI Port     |     63.69 ms (49.4 \*) |    50.67 ms (49.4 \*) |
++--------------+------------------------+-----------------------+
+| |rcssmin|    |     13.35 ms (49.6 >)  |     6.76 ms (49.4 =)  |
++--------------+------------------------+-----------------------+
+| _\ |rcssmin| |      0.21 ms (49.6 >)  |     0.13 ms (49.4 =)  |
++--------------+------------------------+-----------------------+
+
+
+Python 2.7.16
+~~~~~~~~~~~~~
+
+.. rst-class:: benchmark
+
++--------------+------------------------+-----------------------+
+| Name         | bootstrap (142.5)      | bootstrap.min (118.6) |
++==============+========================+=======================+
+| YUI Port     |  1053.69 ms (118.8 \*) |  964.62 ms (118.5 \*) |
++--------------+------------------------+-----------------------+
+| |rcssmin|    |    28.98 ms (119.2 >)  |   12.61 ms (118.6 >)  |
++--------------+------------------------+-----------------------+
+| _\ |rcssmin| |     0.47 ms (119.2 >)  |    0.36 ms (118.6 >)  |
++--------------+------------------------+-----------------------+
+
+.. rst-class:: benchmark
+
++--------------+------------------------+-----------------------+
+| Name         | wikipedia (81.0)       | wikipedia.min (49.4)  |
++==============+========================+=======================+
+| YUI Port     |     61.09 ms (49.4 \*) |    49.44 ms (49.4 \*) |
++--------------+------------------------+-----------------------+
+| |rcssmin|    |     12.93 ms (49.6 >)  |     6.27 ms (49.4 =)  |
++--------------+------------------------+-----------------------+
+| _\ |rcssmin| |      0.24 ms (49.6 >)  |     0.17 ms (49.4 =)  |
++--------------+------------------------+-----------------------+
+
+.. end tables
+
+
+.. vim: ft=rest tw=72

@@ -3,3 +3,21 @@
     font-family: serif;
     font-style: normal;
 }
+
+table.benchmark {
+    width: 40em;
+}
+
+table.benchmark th {
+    text-align: center;
+    white-space: nowrap;
+}
+
+table.benchmark td {
+    white-space: nowrap;
+}
+
+table.benchmark td + td {
+    text-align: right;
+    font-family: monospace;
+}

@@ -1,7 +1,8 @@
-.. license:
-    Copyright 2011 - 2015
+.. copyright:
+    Copyright 2011 - 2019
     André Malo or his licensors, as applicable
 
+.. license:
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
@@ -21,15 +22,20 @@
 
 |**rcssmin**| is a CSS minifier written in python.
 
+.. contents::
+    :local:
+
+
 The minifier is based on the semantics of the `YUI compressor`_\, which itself
 is based on `the rule list by Isaac Schlueter`_\.
 
-This module is a re-implementation aiming for speed instead of maximum
-compression, so it can be used at runtime (rather than during a preprocessing
-step). |rcssmin| does syntactical compression only (removing spaces, comments
-and possibly semicolons). It does not provide semantic compression (like
-removing empty blocks, collapsing redundant properties etc). It does, however,
-support various CSS hacks (by keeping them working as intended).
+This module is a re-implementation aiming for :doc:`speed <benchmark>`
+instead of maximum compression, so it can be used at runtime (rather
+than during a preprocessing step). |rcssmin| does syntactical
+compression only (removing spaces, comments and possibly semicolons). It
+does not provide semantic compression (like removing empty blocks,
+collapsing redundant properties etc). It does, however, support various
+CSS hacks (by keeping them working as intended).
 
 Here's a feature list:
 
@@ -64,16 +70,21 @@ factor 50 or so (depending on the input).
 
 .. _the rule list by Isaac Schlueter: https://github.com/isaacs/cssmin/
 
-|rcssmin| works with both python 2 (starting with python 2.4) and python 3.
+Supported python versions are 2.7 and 3.4+.
+
+
+Development Status
+~~~~~~~~~~~~~~~~~~
+
+|rcssmin| is stable.
 
 
 Documentation
 ~~~~~~~~~~~~~
 
-A :rcssmin:`generated API documentation </>` is available. But you can
-just look into the module. It provides a simple function, called
-``cssmin`` which takes the css as a string and returns the minified
-css as a string.
+The module provides a simple function (generated apidoc below), called
+``cssmin`` which takes the script as a string and returns the minified
+script as a string.
 
 The module additionally provides a "streamy" interface:
 
@@ -81,16 +92,16 @@ The module additionally provides a "streamy" interface:
 
     $ python -mrcssmin <css >minified
 
-It takes two options:
+This command line interface takes two options:
 
   -b  Keep bang-comments (Comments starting with an exclamation mark)
-  -p  Use the python implementation (not the C implementation)
+  -p  Force using the python implementation (not the C implementation)
 
 
-Development Status
-~~~~~~~~~~~~~~~~~~
+API Docs
+--------
 
-|rcssmin| is stable.
+.. autofunction:: rcssmin.cssmin
 
 
 License

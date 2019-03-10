@@ -1,6 +1,13 @@
 Download
 ~~~~~~~~
 
+Change Log
+----------
+
+`CHANGES file <http://storage.perlig.de/rcssmin/CHANGES-1.1.0>`_
+
+
+
 Source Packages
 ---------------
 

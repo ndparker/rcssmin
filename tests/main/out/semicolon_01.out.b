@@ -1,0 +1,1 @@
+foo;{a:c}@media{lalala;}
