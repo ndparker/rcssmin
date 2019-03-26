@@ -1,5 +1,7 @@
 Changes with version
 
+ *) quoted data urls which are not base64 encoded keep their spaces now (#8)
+
  *) Add x86_64, i686 and aarch64 wheels
 
  *) Update python support: 2.7, 3.6+

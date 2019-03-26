@@ -160,6 +160,11 @@ static const rchar pattern_letter[] = {
     U('E'), U('T'), U('T'), U('E'), U('R')
 };
 
+static const rchar pattern_data[] = {
+    U('d'), U('a'), U('t'), U('a'), U(':'),
+    U('D'), U('A'), U('T'), U('A'), U(':')
+};
+
 static const rchar pattern_macie5_init[] = {
     U('/'), U('*'), U('\\'), U('*'), U('/')
 };
@@ -398,14 +403,44 @@ copy_uri_string(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
 {
     const rchar *source = *source_;
     rchar *target = *target_;
+    int is_spacy_data = 0;
     rchar c, quote = source[-1];
 
     *target++ = quote;
     *target_ = target;
 
+    if (!IMATCH(data, &source, &target, ctx)) {
+        --source;
+    }
+    else {
+        while (source < ctx->sentinel && target < ctx->tsentinel) {
+            c = *source++;
+            if (c <= U(' ') || c == U('\\') || c == U('"') || c == U('\'')) {
+                /* no match */
+                --source;
+                break;
+            }
+            *target++ = c;
+
+            if (c == U(',')) {
+                /* no need to check for boundaries below. The initial imatch
+                 * will block us from crossing them */
+                if (!(   target[-2] == U('4')
+                      && target[-3] == U('6')
+                      && (target[-4] == U('e') || target[-4] == U('E'))
+                      && (target[-5] == U('s') || target[-5] == U('S'))
+                      && (target[-6] == U('a') || target[-6] == U('A'))
+                      && (target[-7] == U('b') || target[-7] == U('B'))
+                      && target[-8] == U(';')))
+                    is_spacy_data = 1;
+                break;
+            }
+        }
+    }
+
     while (source < ctx->sentinel && target < ctx->tsentinel) {
         c = *source++;
-        if (RCSSMIN_IS_SPACE(c))
+        if (RCSSMIN_IS_SPACE(c) && !is_spacy_data)
             continue;
         *target++ = c;
         if (RCSSMIN_IS_STRING_DULL(c))

@@ -46,7 +46,8 @@ Here's a feature list:
   stripped: ``{}(=:>[,!``
 - Optional space after unicode escapes is kept, resp. replaced by a simple
   space
-- whitespaces inside ``url()`` definitions are stripped
+- whitespaces inside ``url()`` definitions are stripped, except if it's a
+  quoted non-base64 data url
 - Comments starting with an exclamation mark (``!``) can be kept optionally.
 - All other comments and/or whitespace characters are replaced by a single
   space.
@@ -162,6 +163,10 @@ def _make_cssmin(python_only=False):
     ) % locals()
 
     nl_unesc_sub = _re.compile(nl_escaped).sub
+
+    uri_data_plain = _re.compile((
+        r'[\047"][dD][aA][tT][aA]:([^\000-\040\\"\047,]*),'
+    )).match
 
     uri_space_sub = _re.compile((
         r'(%(escape)s+)|%(spacechar)s+|%(nl_escaped)s+'
@@ -284,6 +289,14 @@ def _make_cssmin(python_only=False):
             in_rule[0] = 0
             return '}'
 
+        def fn_url(group):
+            """ url() handler """
+            uri = group(12)
+            data = uri_data_plain(uri)
+            if not data or data.group(1).lower().endswith(';base64'):
+                uri = uri_space_sub(uri_space_subber, uri)
+            return 'url(%s)' % (uri,)
+
         def fn_at_group(group):
             """ @xxx group handler """
             at_group[0] += 1
@@ -311,8 +324,7 @@ def _make_cssmin(python_only=False):
             fn_open,                             # {
             fn_close,                            # }
             lambda g: g(11),                     # string
-            lambda g: 'url(%s)' % uri_space_sub(uri_space_subber, g(12)),
-                                                 # url(...)
+            fn_url,                              # url(...)
             fn_at_group,                         # @xxx expecting {...}
             None,
             fn_ie7hack,                          # ie7hack
