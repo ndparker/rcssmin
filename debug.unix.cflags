@@ -6,7 +6,7 @@
 -fprofile-arcs
 
 # don't compile on weird code
--std=c89 -pedantic -fno-strict-aliasing -Werror
+-std=c99 -pedantic -fno-strict-aliasing -Werror
 -Wall
 -Wbad-function-cast
 -Wcast-align
