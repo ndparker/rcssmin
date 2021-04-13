@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        versions:
+          - python: 2.7
+            toxenv: py27
+            os: ubuntu-latest
+          - python: 3.5
+            toxenv: py35
+            os: ubuntu-latest
+          - python: 3.6
+            toxenv: py36
+            os: ubuntu-latest
+          - python: 3.7
+            toxenv: py37
+            os: ubuntu-latest
+
+    runs-on: ${{ matrix.versions.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.versions.python }}
+      - run: pip install -r development.txt
+      - run: invoke build
+      - run: invoke test -e ${{ matrix.versions.toxenv }}
+
