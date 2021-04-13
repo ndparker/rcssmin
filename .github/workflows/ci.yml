@@ -13,9 +13,6 @@ jobs:
           - python: 2.7
             toxenv: py27
             os: ubuntu-latest
-          - python: 3.4
-            toxenv: py34
-            os: ubuntu-18.04
           - python: 3.5
             toxenv: py35
             os: ubuntu-latest
