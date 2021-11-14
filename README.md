@@ -66,7 +66,7 @@ distribution contains the details.
 
 ## COPYRIGHT AND LICENSE
 
-Copyright 2011 - 2019
+Copyright 2011 - 2021
 André Malo or his licensors, as applicable.
 
 The whole package (except for the files in the bench/ directory)
@@ -77,7 +77,7 @@ root directory of the distribution or online at:
 
 ## SYSTEM REQUIREMENTS
 
-Supported python versions are 2.7 and 3.4+.
+Supported python versions are 2.7 and 3.6+.
 
 You also need a build environment for python C extensions (i.e. a compiler
 and the python development files).
@@ -141,7 +141,7 @@ or send a mail to <rcssmin-bugs@perlig.de>.
 
 ## AUTHOR INFORMATION
 
-André "nd" Malo <nd@perlig.de>, GPG: 0x8103A37E
+André "nd" Malo <nd@perlig.de>, GPG: 0x029C942244325167
 
 
 >  If God intended people to be naked, they would be born that way.

@@ -1,8 +1,13 @@
 Changes with version
 
+ *) Add x86_64, i686 and aarch64 wheels
+
+ *) Update python support: 2.7, 3.6+
+
  *) Both python 2 and 3 now accept bytes and text as input. All other types now
     raise a TypeError. Before they possibly have been converted to a string,
-    depending on the python version and the implementation.
+    depending on the python version and the implementation. Python 3 also
+    accepts bytearray input.
 
  *) Support for PyPy and Jython is no longer tested. Patches are accepted,
     though.

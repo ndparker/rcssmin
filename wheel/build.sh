@@ -28,6 +28,10 @@ args=( wheel --no-binary "${name}" --no-deps "${pkg}" -w "${target}" )
 
 found=
 for dir in /opt/python/*; do
+    if [ "${dir/pypy}" != "${dir}" ]; then
+        continue
+    fi
+
     pyv="$(
         "${dir}/bin/python" -c 'import sys; sys.stdout.write("".join(map(str, sys.version_info[:2])))'
     )"
@@ -52,7 +56,7 @@ done
 
 # Only keep manylinux wheels
 for whl in "${target}"/*.whl; do
-    if [ "${whl/-manylinux}" = "${whl}" ]; then
+    if [ "${whl/-manylinux}" = "${whl}" -o "${whl/pypy}" != "${whl}" ]; then
         rm -vf -- "${whl}"
     fi
 done

@@ -1,5 +1,5 @@
 .. copyright:
-    Copyright 2011 - 2019
+    Copyright 2011 - 2021
     André Malo or his licensors, as applicable
 
 .. license:
@@ -70,7 +70,7 @@ factor 50 or so (depending on the input).
 
 .. _the rule list by Isaac Schlueter: https://github.com/isaacs/cssmin/
 
-Supported python versions are 2.7 and 3.4+.
+Supported python versions are 2.7 and 3.6+.
 
 
 Development Status

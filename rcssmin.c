@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 - 2019
+ * Copyright 2011 - 2021
  * Andr\xe9 Malo or his licensors, as applicable
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,11 +18,7 @@
 #include "cext.h"
 EXT_INIT_FUNC;
 
-#ifdef EXT3
-typedef Py_UNICODE rchar;
-#else
 typedef unsigned char rchar;
-#endif
 #ifdef U
 #undef U
 #endif
@@ -1036,15 +1032,15 @@ Minify CSS.\n\
 :Note: This is a hand crafted C implementation built on the regex\n\
        semantics.\n\
 \n\
-:Parameters:\n\
-  `style` : ``str``\n\
+Parameters:\n\
+  style (str):\n\
     CSS to minify\n\
 \n\
-  `keep_bang_comments` : ``bool``\n\
+  keep_bang_comments (bool):\n\
     Keep comments starting with an exclamation mark? (``/*!...*/``)\n\
 \n\
-:Return: Minified style\n\
-:Rtype: ``str``");
+Returns:\n\
+  str: Minified style");
 
 static PyObject *
 rcssmin_cssmin(PyObject *self, PyObject *args, PyObject *kwds)
@@ -1058,6 +1054,7 @@ rcssmin_cssmin(PyObject *self, PyObject *args, PyObject *kwds)
 #endif
 #ifdef EXT3
     int bytes;
+    rchar *bytestyle;
 #endif
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|O", kwlist,
@@ -1087,82 +1084,130 @@ rcssmin_cssmin(PyObject *self, PyObject *args, PyObject *kwds)
             LCOV_EXCL_LINE_RETURN(NULL);
         uni = 0;
     }
-#endif
 
-#ifdef EXT3
-    if (PyBytes_Check(style) || PyByteArray_Check(style)) {
-        bytes = 1;
-        if (!(style = PyUnicode_FromEncodedObject(style,
-                                                  "latin-1", "strict")))
-            LCOV_EXCL_LINE_RETURN(NULL);
-    }
-    else if (PyUnicode_Check(style)) {
-        bytes = 0;
-        Py_INCREF(style);
-    }
-    else {
-        PyErr_SetString(PyExc_TypeError, "Unexpected type");
-        return NULL;
-    }
-#define PyString_GET_SIZE PyUnicode_GET_SIZE
-#define PyString_AS_STRING PyUnicode_AS_UNICODE
-#define _PyString_Resize PyUnicode_Resize
-#define PyString_FromStringAndSize PyUnicode_FromUnicode
-#endif
-
+    /* Loop until the target buffer is big enough */
     rlength = slength = PyString_GET_SIZE(style);
+    while (1) {
+        if (!(result = PyString_FromStringAndSize(NULL, rlength))) {
+            LCOV_EXCL_START
 
-again:
-    if (!(result = PyString_FromStringAndSize(NULL, rlength))) {
-        /* LCOV_EXCL_START */
+            Py_DECREF(style);
+            return NULL;
 
-        Py_DECREF(style);
-        return NULL;
+            LCOV_EXCL_STOP
+        }
+        Py_BEGIN_ALLOW_THREADS
+        length = rcssmin((rchar *)PyString_AS_STRING(style),
+                         (rchar *)PyString_AS_STRING(result),
+                         slength, rlength, keep_bang_comments);
+        Py_END_ALLOW_THREADS
 
-        /* LCOV_EXCL_STOP */
-    }
-    Py_BEGIN_ALLOW_THREADS
-    length = rcssmin((rchar *)PyString_AS_STRING(style),
-                     (rchar *)PyString_AS_STRING(result),
-                     slength, rlength, keep_bang_comments);
-    Py_END_ALLOW_THREADS
-
-    if (length > rlength) {
-        Py_DECREF(result);
-        rlength = length;
-        goto again;
+        if (length > rlength) {
+            Py_DECREF(result);
+            rlength = length;
+            continue; /* Try again with a bigger buffer */
+        }
+        break;
     }
 
     Py_DECREF(style);
     if (length < 0) {
-        /* LCOV_EXCL_START */
+        LCOV_EXCL_START
 
         Py_DECREF(result);
         return NULL;
 
-        /* LCOV_EXCL_STOP */
-}
+        LCOV_EXCL_STOP
+    }
+
     if (length != rlength && _PyString_Resize(&result, length) == -1)
         LCOV_EXCL_LINE_RETURN(NULL);
 
-#ifdef EXT2
     if (uni) {
         style = PyUnicode_DecodeUTF8(PyString_AS_STRING(result),
                                      PyString_GET_SIZE(result), "strict");
         Py_DECREF(result);
         return style;
     }
-#endif
 
-#ifdef EXT3
-    if (bytes) {
-        style = PyUnicode_AsEncodedString(result, "latin-1", "strict");
+    return result;
+
+#else  /* EXT3 */
+
+    if (PyUnicode_Check(style)) {
+        bytes = 0;
+        style = PyUnicode_AsUTF8String(style);
+        bytestyle = (rchar *)PyBytes_AS_STRING(style);
+        slength = PyBytes_GET_SIZE(style);
+    }
+    else if (PyBytes_Check(style)) {
+        bytes = 1;
+        Py_INCREF(style);
+        bytestyle = (rchar *)PyBytes_AS_STRING(style);
+        slength = PyBytes_GET_SIZE(style);
+    }
+    else if (PyByteArray_Check(style)) {
+        bytes = 2;
+        Py_INCREF(style);
+        bytestyle = (rchar *)PyByteArray_AS_STRING(style);
+        slength = PyByteArray_GET_SIZE(style);
+    }
+    else {
+        PyErr_SetString(PyExc_TypeError, "Unexpected type");
+        return NULL;
+    }
+
+    /* Loop until the target buffer is big enough */
+    rlength = slength;
+    while (1) {
+        if (!(result = PyBytes_FromStringAndSize(NULL, rlength))) {
+            LCOV_EXCL_START
+
+            Py_DECREF(style);
+            return NULL;
+
+            LCOV_EXCL_STOP
+        }
+        Py_BEGIN_ALLOW_THREADS
+        length = rcssmin(bytestyle, (rchar *)PyBytes_AS_STRING(result),
+                         slength, rlength, keep_bang_comments);
+        Py_END_ALLOW_THREADS
+
+        if (length > rlength) {
+            Py_DECREF(result);
+            rlength = length;
+            continue; /* Try again with a bigger buffer */
+        }
+        break;
+    }
+
+    Py_DECREF(style);
+    if (length < 0) {
+        LCOV_EXCL_START
+
+        Py_DECREF(result);
+        return NULL;
+
+        LCOV_EXCL_STOP
+    }
+
+    if (!bytes) {
+        style = PyUnicode_DecodeUTF8(PyBytes_AS_STRING(result), length,
+                                     "strict");
         Py_DECREF(result);
         return style;
     }
+    if (bytes == 1) {
+        if (length != slength) {
+            _PyBytes_Resize(&result, length);
+        }
+        return result;
+    }
+    /* bytes == 2: bytearray */
+    style = PyByteArray_FromStringAndSize(PyBytes_AS_STRING(result), length);
+    Py_DECREF(result);
+    return style;
 #endif
-
-    return result;
 }
 
 /* ------------------------ BEGIN MODULE DEFINITION ------------------------ */
@@ -1192,7 +1237,6 @@ EXT_INIT_FUNC {
         EXT_INIT_ERROR(LCOV_EXCL_LINE(NULL));
 
     EXT_ADD_UNICODE(m, "__author__", "Andr\xe9 Malo", "latin-1");
-    EXT_ADD_STRING(m, "__docformat__", "restructuredtext en");
     EXT_ADD_STRING(m, "__version__", STRINGIFY(EXT_VERSION));
 
     EXT_INIT_RETURN(m);

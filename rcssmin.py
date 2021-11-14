@@ -12,7 +12,7 @@ itself is based on `the rule list by Isaac Schlueter`_\\.
 
 :Copyright:
 
- Copyright 2011 - 2019
+ Copyright 2011 - 2021
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -73,7 +73,6 @@ Supported python versions are 2.7 and 3.4+.
 .. _the rule list by Isaac Schlueter: https://github.com/isaacs/cssmin/
 """
 __author__ = u"Andr\xe9 Malo"
-__docformat__ = "restructuredtext en"
 __license__ = "Apache License, Version 2.0"
 __version__ = '1.0.6'
 __all__ = ['cssmin']
@@ -85,13 +84,13 @@ def _make_cssmin(python_only=False):
     """
     Generate CSS minifier.
 
-    :Parameters:
-      `python_only` : ``bool``
+    Parameters:
+      python_only (bool):
         Use only the python variant. If true, the c extension is not even
         tried to be loaded.
 
-    :Return: Minifier
-    :Rtype: ``callable``
+    Returns:
+      callable: Minifier
     """
     # pylint: disable = too-many-locals
 
@@ -144,7 +143,7 @@ def _make_cssmin(python_only=False):
     ie7hack = r'(?:>/\*\*/)'
 
     uri = (
-        # noqa pylint: disable = bad-continuation
+        # noqa pylint: disable = bad-option-value, bad-continuation
 
         r'(?:'
 
@@ -179,7 +178,7 @@ def _make_cssmin(python_only=False):
     post_esc_sub = _re.compile(r'[\r\n\f\t]+').sub
 
     main_sub = _re.compile((
-        # noqa pylint: disable = bad-continuation
+        # noqa pylint: disable = bad-option-value, bad-continuation
 
         r'([^\\"\047u>@\r\n\f\040\t/;:{}+]+)'             # 1
         r'|(?<=[{}(=:>[,!])(%(space)s+)'                  # 2
@@ -298,7 +297,7 @@ def _make_cssmin(python_only=False):
             return '>' + space_sub(space_subber, group(15))
 
         table = (
-            # noqa pylint: disable = bad-continuation
+            # noqa pylint: disable = bad-option-value, bad-continuation
 
             None,
             None,
@@ -344,22 +343,24 @@ def _make_cssmin(python_only=False):
         """
         Minify CSS.
 
-        :Parameters:
-          `style` : ``str``
+        Parameters:
+          style (str):
             CSS to minify
 
-          `keep_bang_comments` : ``bool``
+          keep_bang_comments (bool):
             Keep comments starting with an exclamation mark? (``/*!...*/``)
 
-        :Return: Minified style
-        :Rtype: ``str``
+        Returns:
+          str: Minified style
         """
         # pylint: disable = redefined-outer-name
 
         is_bytes, style = _as_str(style)
         style = main_sub(main_subber(keep_bang_comments), style)
         if is_bytes:
-            return style.encode('latin-1')
+            style = style.encode('latin-1')
+            if is_bytes == 2:
+                style = bytearray(style)
         return style
 
     return cssmin
@@ -367,19 +368,22 @@ def _make_cssmin(python_only=False):
 cssmin = _make_cssmin()
 
 
-def _as_str(style):
+def _as_str(script):
     """ Make sure the style is a text string """
     is_bytes = False
     if str is bytes:
-        if not isinstance(style, basestring):  # noqa pylint: disable = undefined-variable
+        if not isinstance(script, basestring):  # noqa pylint: disable = undefined-variable
             raise TypeError("Unexpected type")
-    elif isinstance(style, (bytes, bytearray)):
+    elif isinstance(script, bytes):
         is_bytes = True
-        style = style.decode('latin-1')
-    elif not isinstance(style, str):
+        script = script.decode('latin-1')
+    elif isinstance(script, bytearray):
+        is_bytes = 2
+        script = script.decode('latin-1')
+    elif not isinstance(script, str):
         raise TypeError("Unexpected type")
 
-    return is_bytes, style
+    return is_bytes, script
 
 
 if __name__ == '__main__':

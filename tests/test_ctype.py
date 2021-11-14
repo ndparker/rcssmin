@@ -2,7 +2,7 @@
 u"""
 :Copyright:
 
- Copyright 2019
+ Copyright 2019 - 2021
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -54,3 +54,9 @@ def test_input_type():
 
     with raises(TypeError):
         py_cssmin(None)
+
+    if str is not bytes:
+        assert py_cssmin(bytearray(b'x')) == b'x'
+        assert isinstance(py_cssmin(bytearray(b'x')), bytearray)
+        assert c_cssmin(bytearray(b'x')) == b'x'
+        assert isinstance(c_cssmin(bytearray(b'x')), bytearray)

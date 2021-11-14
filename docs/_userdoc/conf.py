@@ -23,11 +23,13 @@ import sys, os
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.viewcode',
 ]
 
 
 def setup(app):
-    app.add_stylesheet('ci.css')
+    app.add_css_file('ci.css')
 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -44,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'rCSSmin'
-copyright = u'2011 - 2019 Andr\xe9 Malo'
+copyright = u'2011 - 2021 Andr\xe9 Malo'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
