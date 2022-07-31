@@ -2,7 +2,7 @@
 u"""
 :Copyright:
 
- Copyright 2019 - 2021
+ Copyright 2019 - 2022
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -26,7 +26,6 @@ u"""
 YUI tests.
 """
 __author__ = u"Andr\xe9 Malo"
-__docformat__ = "restructuredtext en"
 
 import os as _os
 import re as _re

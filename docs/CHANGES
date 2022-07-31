@@ -1,3 +1,10 @@
+Changes with version
+
+ *) Add support for Python 3.11
+
+ *) Update project boilerplate
+
+
 Changes with version 1.1.0
 
  *) quoted data urls which are not base64 encoded keep their spaces now (#8)

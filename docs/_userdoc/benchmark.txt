@@ -1,5 +1,5 @@
 .. copyright:
-    Copyright 2011 - 2021
+    Copyright 2011 - 2022
     André Malo or his licensors, as applicable
 
 .. license:
@@ -31,6 +31,9 @@ in the source distribution. Since the numbers don't vary much between
 python minor releases (e.g. 3.3 vs 3.4), only one benchmark per major
 version is given below. The :file:`docs/BENCHMARKS` file in the source
 distribution contains a more comprehensive list.
+Said that - there is a considerable speed up of the python-only ports to
+be observed with Python 3.11. Thatswhy the benchmark will list all
+Python 3 versions up to 3.10.
 
 Here's the list of benchmarked implementations:
 

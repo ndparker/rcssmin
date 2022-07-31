@@ -9,7 +9,7 @@ Write benchmark results.
 
 :Copyright:
 
- Copyright 2014 - 2021
+ Copyright 2014 - 2022
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -35,8 +35,6 @@ Usage::
 
 """
 __author__ = u"Andr\xe9 Malo"
-__docformat__ = "restructuredtext en"
-__license__ = "Apache License, Version 2.0"
 __version__ = "1.0.0"
 
 import os as _os
@@ -92,14 +90,15 @@ def write_table(filename, results):
 
     # First we transform our data into a table (list of lists)
     pythons, widths = [], [0] * (benched_per_table + 1)
-    last_version = None
+    versions = []
     for version, _, result in results:
         version = uni(version)
-        if not(last_version is None or version.startswith('2.')):
+        if versions and versions[-1].startswith('3.10.') \
+                and not version.startswith('2.'):
             continue
-        last_version = version
+        versions.append(version)
 
-        namesub = _re.compile(r'(?:-\d+(?:\.\d+)*)?\.css$').sub
+        namesub = _re.compile(r'(?:-\d+(?:\.\d+)*)?\.js$').sub
         result = iter(result)
         tables = []
 
@@ -147,7 +146,7 @@ def write_table(filename, results):
             tables.append(zip(*rows))
         pythons.append((version, tables))
 
-        if last_version.startswith('2.'):
+        if versions[-1].startswith('2.'):
             break
 
     # Second we create a rest table from it
@@ -240,7 +239,6 @@ def write_plain(filename, results):
     results = sorted(results,
                      key=(lambda x: [int(a) for a in x[0].split('.')]),
                      reverse=True)
-
     for idx, (version, import_notes, result) in enumerate(results):
         if idx:
             lines.append('')

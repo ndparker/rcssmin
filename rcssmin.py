@@ -12,7 +12,7 @@ itself is based on `the rule list by Isaac Schlueter`_\\.
 
 :Copyright:
 
- Copyright 2011 - 2021
+ Copyright 2011 - 2022
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -93,11 +93,12 @@ def _make_cssmin(python_only=False):
     Returns:
       callable: Minifier
     """
-    # pylint: disable = too-many-locals
+    # pylint: disable = unused-variable, possibly-unused-variable
+    # pylint: disable = too-many-locals, too-many-statements
 
     if not python_only:
         try:
-            import _rcssmin
+            import _rcssmin  # pylint: disable = import-outside-toplevel
         except ImportError:
             pass
         else:
@@ -401,7 +402,7 @@ def _as_str(script):
 if __name__ == '__main__':
     def main():
         """ Main """
-        import sys as _sys
+        import sys as _sys  # pylint: disable = import-outside-toplevel
 
         keep_bang_comments = (
             '-b' in _sys.argv[1:]

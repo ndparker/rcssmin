@@ -46,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'rCSSmin'
-copyright = u'2011 - 2021 Andr\xe9 Malo'
+copyright = u'2011 - 2022 Andr\xe9 Malo'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
