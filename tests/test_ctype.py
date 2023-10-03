@@ -30,24 +30,26 @@ __author__ = u"Andr\xe9 Malo"
 from pytest import raises
 
 import rcssmin as _rcssmin
+
 # pylint: disable = protected-access
 py_cssmin = _rcssmin._make_cssmin(python_only=True)
 
 import _rcssmin
+
 c_cssmin = _rcssmin.cssmin
 
 from . import _util as _test
 
 
 def test_keep_bang_comments():
-    """ keep_bang_comments argument error """
+    """keep_bang_comments argument error"""
     with raises(RuntimeError) as e:
         c_cssmin('', keep_bang_comments=_test.badbool)
     assert e.value.args == ('yoyo',)
 
 
 def test_input_type():
-    """ input type must be a string or bytes """
+    """input type must be a string or bytes"""
     with raises(TypeError):
         c_cssmin(None)
 

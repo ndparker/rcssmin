@@ -31,39 +31,42 @@ import os as _os
 import re as _re
 
 import rcssmin as _rcssmin
+
 # pylint: disable = protected-access
 py_cssmin = _rcssmin._make_cssmin(python_only=True)
 
 import _rcssmin
+
 c_cssmin = _rcssmin.cssmin
 
 _TESTS = _os.path.dirname(__file__)
 
 
 def find(base, ext, out):
-    """ Find test files """
+    """Find test files"""
     for name in _os.listdir(_os.path.join(_TESTS, base)):
         item = "%s/%s" % (base, name)
-        if _os.path.isfile(_os.path.join(_TESTS, item)) \
-                and item.endswith('.' + ext):
-            outitem = "%s/out/%s.%s" % (base, name[:-len(ext) - 1], out)
+        if _os.path.isfile(_os.path.join(_TESTS, item)) and item.endswith(
+            '.' + ext
+        ):
+            outitem = "%s/out/%s.%s" % (base, name[: -len(ext) - 1], out)
             yield item, outitem
 
 
 def load(name):
-    """ Load a file """
+    """Load a file"""
     with open(_os.path.join(_TESTS, name), 'rb') as fp:
         return fp.read()
 
 
 def save(name, value):
-    """ Load a file """
+    """Load a file"""
     with open(_os.path.join(_TESTS, name), 'wb') as fp:
         fp.write(value)
 
 
 def test_regular():
-    """ Test main/*.css """
+    """Test main/*.css"""
     bscheck = _re.compile(
         r'(?<!\\)(?:\\\\)*\\[0-9a-zA-Z]{1,6}$'.encode('ascii')
     ).search
@@ -85,7 +88,7 @@ def test_regular():
 
 
 def test_banged():
-    """ Test main/*.css """
+    """Test main/*.css"""
     bscheck = _re.compile(
         r'(?<!\\)(?:\\\\)*\\[0-9a-zA-Z]{1,6}$'.encode('ascii')
     ).search
