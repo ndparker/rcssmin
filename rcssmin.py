@@ -75,7 +75,7 @@ Supported python versions are 2.7 and 3.4+.
 """
 __author__ = u"Andr\xe9 Malo"
 __license__ = "Apache License, Version 2.0"
-__version__ = '1.1.1'
+__version__ = '1.1.2'
 __all__ = ['cssmin']
 
 import re as _re
