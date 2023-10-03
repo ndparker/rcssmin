@@ -1,3 +1,10 @@
+Changes with version
+
+ *) Add musllinux wheels
+
+ *) Update project boilerplate
+
+
 Changes with version 1.1.1
 
  *) Add support for Python 3.11
