@@ -61,7 +61,7 @@ distribution contains the details.
 
 .. _the rule list by Isaac Schlueter: https://github.com/isaacs/cssmin/
 
-* [Change Log](docs/CHANGES)
+* [Change Log](CHANGES)
 * [Development](docs/DEVELOPMENT.md)
 
 
