@@ -67,7 +67,7 @@ rcssmin.c is a reimplementation of rcssmin.py in C and improves runtime up to
 factor 100 or so (depending on the input). docs/BENCHMARKS in the source
 distribution contains the details.
 
-Supported python versions are 2.7 and 3.4+.
+Supported python versions are 2.7 and 3.6+.
 
 .. _YUI compressor: https://github.com/yui/yuicompressor/
 
