@@ -1,0 +1,1 @@
+.box{& :is(ol){margin:0}&.foo{duh:2px}&.bar{duh:2px}&.plop{duh:2px}& .baz{duh:2px}& .zopp{duh:2px}}&

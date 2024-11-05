@@ -55,7 +55,7 @@ static const unsigned short rcssmin_charmask[128] = {
      21,  28,   8,  21,   8,   8,  21,  21,
      21,  21,  21,  21,  21,  21,  21,  21,
      21,  21,  21,  21,  21,  21,  21,  21,
-     28, 469,   4,  85,  85,  85,  85,   4,
+     28, 469,   4,  85,  85,  85,  84,   4,
     149, 277,  85,  84, 469, 117,  85,  84,
     115, 115, 115, 115, 115, 115, 115, 115,
     115, 115, 468, 340,  85, 469, 468,  85,
@@ -175,6 +175,8 @@ static const rchar pattern_macie5_exit[] = {
 
 /*
  * Match a pattern (and copy immediately to target)
+ *
+ * Returns: 1 if the pattern was fully matched and copied, 0 otherwise.
  */
 #if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
 #pragma GCC diagnostic push
@@ -211,6 +213,8 @@ copy_match(const rchar *pattern, const rchar *psentinel,
 
 /*
  * Match a pattern (and copy immediately to target) - CI version
+ *
+ * Returns: 1 if the pattern was fully matched and copied, 0 otherwise.
  */
 static int
 copy_imatch(const rchar *pattern, const rchar *psentinel,
@@ -243,6 +247,8 @@ copy_imatch(const rchar *pattern, const rchar *psentinel,
 
 /*
  * Copy characters
+ *
+ * Returns: 1 if the source was fully copied, 0 otherwise.
  */
 #if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
 #pragma GCC diagnostic push
@@ -291,6 +297,8 @@ copy(const rchar *source, const rchar *sentinel, rchar **target_,
 
 /*
  * Copy escape
+ *
+ * source: after the initial \\ char
  */
 static void
 copy_escape(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
@@ -344,6 +352,8 @@ copy_escape(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
 
 /*
  * Copy string
+ *
+ * source: after the initial quote (either " or ')
  */
 static void
 copy_string(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
@@ -396,7 +406,16 @@ copy_string(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
 
 
 /*
- * Copy URI string
+ * Copy quoted URI string
+ *
+ * source: after the initial quote (either " or ')
+ *
+ * whitespaces inside ``url()`` definitions are stripped, except if it's a
+ * quoted non-base64 data url (e.g. SVG)
+ *
+ * Returns: 0 if the string was fully matched and copied, -1 and rollback
+ *          otherwise.
+ *
  */
 static int
 copy_uri_string(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
@@ -486,6 +505,11 @@ copy_uri_string(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
 
 /*
  * Copy URI (unquoted)
+ *
+ * source: after the initial "url(" pattern
+ *
+ * Returns: 0 if the string was fully matched and copied, -1 and rollback
+ *          otherwise.
  */
 static int
 copy_uri_unquoted(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
@@ -542,7 +566,9 @@ copy_uri_unquoted(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
 
 
 /*
- * Copy url
+ * Copy url(...)
+ *
+ * source: after the initial "u"
  */
 static void
 copy_url(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
@@ -596,6 +622,8 @@ copy_url(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
 
 /*
  * Copy @-group
+ *
+ * source: after the initial "@"
  */
 static void
 copy_at_group(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
@@ -606,11 +634,13 @@ copy_at_group(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
     *target++ = U('@');
     *target_ = target;
 
+/* Reset to beginning before matching */
 #define REMATCH(what) ( \
     source = *source_, \
     target = *target_, \
     IMATCH(what, &source, &target, ctx) \
 )
+/* Shortcut, simply copy-match */
 #define CMATCH(what) IMATCH(what, &source, &target, ctx)
 
     if ((  !CMATCH(media)
@@ -636,18 +666,28 @@ copy_at_group(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
 
 
 /*
- * Skip space
+ * Skip space (and any comment) in source. Source is not modified.
+ * IOW: find the position after current space and comment run.
+ *
+ * source: start scanning
+ *
+ * Returns: 1 if spaces where found, 0 otherwise.
+ *          `end` will be pointer after the space-comment (if any, source
+ *          otherwise).
  */
-static const rchar *
-skip_space(const rchar *source, rcssmin_ctx_t *ctx)
+static int
+skip_space(const rchar *source, rcssmin_ctx_t *ctx, const rchar **end)
 {
     const rchar *begin = source;
-    int res;
+    int res, found_space = 0;
     rchar c;
+
+    *end = begin;
 
     while (source < ctx->sentinel) {
         c = *source;
         if (RCSSMIN_IS_SPACE(c)) {
+            found_space = 1;
             ++source;
             continue;
         }
@@ -664,7 +704,7 @@ skip_space(const rchar *source, rcssmin_ctx_t *ctx)
                 if (c != U('*'))
                     continue;
                 if (!(source < ctx->sentinel))
-                    return begin;
+                    return found_space;
                 if (*source != U('/'))
                     continue;
 
@@ -674,7 +714,7 @@ skip_space(const rchar *source, rcssmin_ctx_t *ctx)
                 break;
             }
             if (!res)
-                return begin;
+                return found_space;
 
             continue;
         }
@@ -682,12 +722,18 @@ skip_space(const rchar *source, rcssmin_ctx_t *ctx)
         break;
     }
 
-    return source;
+    *end = source;
+    return found_space;
 }
 
 
 /*
- * Copy space
+ * Copy space + comments to target:
+ *   - if need_space is NEED_SPACE_MAYBE, a single space might appear in the
+ *     target, depending on what comes before and after
+ *   - bang comments are copied if this is requested
+ *
+ * source: *after* the first scanned character (WS or /)
  */
 static void
 copy_space(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx,
@@ -702,7 +748,7 @@ copy_space(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx,
     if (need_space == NEED_SPACE_MAYBE
         && source > ctx->start
         && !RCSSMIN_IS_PRE_CHAR(source[-1])
-        && (end = skip_space(source, ctx)) < ctx->sentinel
+        && (skip_space(source, ctx, &end), end) < ctx->sentinel
         && (!RCSSMIN_IS_POST_CHAR(*end)
             || (*end == U(':') && !ctx->in_rule && !ctx->at_group))) {
 
@@ -775,7 +821,16 @@ copy_space(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx,
 
 
 /*
- * Copy space if comment
+ * Copy space if it's comment start ("/" followed by "*")
+ *   - if need_space is NEED_SPACE_MAYBE, a single space might appear in the
+ *     target, depending on what comes before and after
+ *   - bang comments are copied if this is requested
+ *
+ * The initial slash is copied either way.
+ *
+ * source: after the initial "/"
+ *
+ * Returns: 0 if it was indeed a comment, -1 otherwise.
  */
 static int
 copy_space_comment(const rchar **source_, rchar **target_,
@@ -802,7 +857,12 @@ copy_space_comment(const rchar **source_, rchar **target_,
 
 
 /*
- * Copy space if exists
+ * Copy space-comment if exists (only bang comments will be copied if
+ * requested)
+ *
+ * source: start scanning
+ *
+ * Returns: 0 if it was a valid space or comment, -1 otherwise.
  */
 static int
 copy_space_optional(const rchar **source_, rchar **target_,
@@ -828,7 +888,10 @@ copy_space_optional(const rchar **source_, rchar **target_,
 
 
 /*
- * Copy :first-line|letter
+ * Copy :first-line|letter. If the following character (after comments and
+ * spaces) is a "{" or ",", a space is inserted to the target.
+ *
+ * source: after the initial ":"
  */
 static void
 copy_first(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
@@ -855,7 +918,7 @@ copy_first(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
             ABORT;
     }
 
-    next = skip_space(source, ctx);
+    skip_space(source, ctx, &next);
     if (!(next < ctx->sentinel && target < ctx->tsentinel
         && (*next == U('{') || *next == U(','))))
         ABORT;
@@ -868,7 +931,36 @@ copy_first(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
 
 
 /*
- * Copy IE7 hack
+ * Copy & (nesting selector). Make sure to keep a space if the following
+ * space-comment contains one.
+ *
+ * source: after the initial "&"
+ */
+static void
+copy_nesting(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
+{
+    const rchar *source = *source_, *next;
+    rchar *target = *target_;
+
+    *target++ = U('&');
+    *target_ = target;
+
+    if (!(source < ctx->sentinel && target < ctx->tsentinel))
+        ABORT;
+
+    if (skip_space(source, ctx, &next) && next < ctx->sentinel) {
+        *target++ = U(' ');
+        *target_ = target;
+    }
+
+    (void)copy_space_optional(source_, target_, ctx);
+}
+
+
+/*
+ * Copy IE7 hack (">" followed by an empty comment)
+ *
+ * source: after the initial ">"
  */
 static void
 copy_ie7hack(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
@@ -896,6 +988,8 @@ copy_ie7hack(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
 
 /*
  * Copy semicolon; miss out duplicates or even this one (before '}')
+ *
+ * source: after the semicolon
  */
 static void
 copy_semicolon(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
@@ -905,7 +999,7 @@ copy_semicolon(const rchar **source_, rchar **target_, rcssmin_ctx_t *ctx)
 
     begin = source;
     while (source < ctx->sentinel) {
-        end = skip_space(source, ctx);
+        skip_space(source, ctx, &end);
         if (!(end < ctx->sentinel)) {
             if (!(target < ctx->tsentinel))
                 ABORT;
@@ -1002,6 +1096,11 @@ rcssmin(const rchar *source, rchar *target, Py_ssize_t slength,
         /* URL */
         case U('u'):
             copy_url(&source, &target, ctx);
+            continue;
+
+        /* Nesting selector */
+        case U('&'):
+            copy_nesting(&source, &target, ctx);
             continue;
 
         /* IE7hack */

@@ -41,7 +41,7 @@ def _make_charmask():
     """ Generate character mask table """
     # pylint: disable = too-many-branches
 
-    dull = r'[^\\"\047u>@\r\n\f\040\t/;:{}+]'
+    dull = r'[^\\"&\047u>@\r\n\f\040\t/;:{}+]'
     hexchar = r'[0-9a-fA-F]'
     escaped = r'[^\n\r\f0-9a-fA-F]'
     space = r'[\040\t\r\n\f]'

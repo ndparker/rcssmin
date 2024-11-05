@@ -1,0 +1,1 @@
+/*! Issue 17 */.box{& :is(ol){margin:0}&.foo{duh:2px}&.bar{duh:2px}&/*! hey! */.plop{duh:2px}& /*!duh*/.baz{duh:2px}& .zopp{duh:2px}}&

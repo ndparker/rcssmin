@@ -48,6 +48,7 @@ Here's a feature list:
   space
 - whitespaces inside ``url()`` definitions are stripped, except if it's a
   quoted non-base64 data url
+- The nesting selector (``&``) is recognized
 - Comments starting with an exclamation mark (``!``) can be kept optionally.
 - All other comments and/or whitespace characters are replaced by a single
   space.
@@ -163,6 +164,7 @@ def _make_cssmin(python_only=False):
         r')'
     ) % locals()
 
+    comment_sub = _re.compile(comment).sub
     nl_unesc_sub = _re.compile(nl_escaped).sub
 
     uri_data_plain = _re.compile((
@@ -186,10 +188,10 @@ def _make_cssmin(python_only=False):
     main_sub = _re.compile((
         # noqa pylint: disable = bad-option-value, bad-continuation
 
-        r'([^\\"\047u>@\r\n\f\040\t/;:{}+]+)'             # 1
+        r'([^\\"&\047u>@\r\n\f\040\t/;:{}+]+)'            # 1
         r'|(?<=[{}(=:>[,!])(%(space)s+)'                  # 2
         r'|^(%(space)s+)'                                 # 3
-        r'|(%(space)s+)(?=(([:{});=>\],!])|$)?)'          # 4, 5, 6
+        r'|(?<!&)(%(space)s+)(?=(([:{});=>\],!])|$)?)'    # 4, 5, 6
         r'|;(%(space)s*(?:;%(space)s*)*)(?=(\})?)'        # 7, 8
         r'|(\{)'                                          # 9
         r'|(\})'                                          # 10
@@ -207,12 +209,13 @@ def _make_cssmin(python_only=False):
                 r')-)?'
                 r'[kK][eE][yY][fF][rR][aA][mM][eE][sS]'
             r'))(?!%(nmchar)s)'
-        r'|(%(ie7hack)s)(%(space)s*)'                     # 14, 15
-        r'|(:[fF][iI][rR][sS][tT]-[lL]'                   # 16
+        r'|(&)(%(space)s+)(?=(.|$))'                      # 14, 15, 16
+        r'|(%(ie7hack)s)(%(space)s*)'                     # 17, 18
+        r'|(:[fF][iI][rR][sS][tT]-[lL]'                   # 19
             r'(?:[iI][nN][eE]|[eE][tT][tT][eE][rR]))'
-            r'(%(space)s*)(?=[{,])'                       # 17
-        r'|(%(nl_strings)s)'                              # 18
-        r'|(%(escape)s[^\\"\047u>@\r\n\f\040\t/;:{}+]*)'  # 19
+            r'(%(space)s*)(?=[{,])'                       # 20
+        r'|(%(nl_strings)s)'                              # 21
+        r'|(%(escape)s[^\\"\047u>@\r\n\f\040\t/;:{}+]*)'  # 22
     ) % locals()).sub
 
     # print(main_sub.__self__.pattern)
@@ -282,12 +285,13 @@ def _make_cssmin(python_only=False):
             if at_group[0]:
                 at_group[0] -= 1
             else:
-                in_rule[0] = 1
+                in_rule[0] += 1
             return '{'
 
         def fn_close(_):
             """ } handler """
-            in_rule[0] = 0
+            if in_rule[0]:
+                in_rule[0] -= 1
             return '}'
 
         def fn_url(group):
@@ -303,12 +307,20 @@ def _make_cssmin(python_only=False):
             at_group[0] += 1
             return group(13)
 
+        def fn_space_post_nesting_selector(group):
+            """ nesting selector with space after """
+            return (
+                group(14)
+                + ((comment_sub('', group(15)) and ' ') if group(16) else '')
+                + space_sub(space_subber, group(15))
+            )
+
         def fn_ie7hack(group):
             """ IE7 Hack handler """
             if not in_rule[0] and not at_group[0]:
                 in_macie5[0] = 0
-                return group(14) + space_sub(space_subber, group(15))
-            return '>' + space_sub(space_subber, group(15))
+                return group(17) + space_sub(space_subber, group(18))
+            return '>' + space_sub(space_subber, group(18))
 
         table = (
             # noqa pylint: disable = bad-option-value, bad-continuation
@@ -328,14 +340,17 @@ def _make_cssmin(python_only=False):
             fn_url,                              # url(...)
             fn_at_group,                         # @xxx expecting {...}
             None,
+            None,
+            fn_space_post_nesting_selector,      # nesting selector
+            None,
             fn_ie7hack,                          # ie7hack
             None,
-            lambda g: g(16) + ' ' + space_sub(space_subber, g(17)),
+            lambda g: g(19) + ' ' + space_sub(space_subber, g(20)),
                                                  # :first-line|letter followed
                                                  # by [{,] (apparently space
                                                  # needed for IE6)
-            lambda g: nl_unesc_sub('', g(18)),   # nl_string
-            lambda g: post_esc_sub(' ', g(19)),  # escape
+            lambda g: nl_unesc_sub('', g(21)),   # nl_string
+            lambda g: post_esc_sub(' ', g(22)),  # escape
         )
 
         def func(match):
