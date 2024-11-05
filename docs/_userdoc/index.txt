@@ -49,6 +49,7 @@ Here's a feature list:
   space
 - whitespaces inside ``url()`` definitions are stripped, except if it's a
   quoted non-base64 data url
+- The nesting selector (``&``) is recognized
 - Comments starting with an exclamation mark (``!``) can be kept optionally.
 - All other comments and/or whitespace characters are replaced by a single
   space.
