@@ -5,7 +5,6 @@ Project Settings
 
 """
 
-
 settings = dict(
     package="rcssmin",
     #
