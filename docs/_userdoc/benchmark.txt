@@ -22,7 +22,7 @@
  rCSSmin - Benchmark
 =====================
 
-.. contents::
+.. xxcontents::
     :local:
 
 
