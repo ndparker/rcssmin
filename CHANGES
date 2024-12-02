@@ -1,3 +1,10 @@
+Changes with version
+
+ *) Change doc theme to "furo"
+
+ *) Update project boilerplate
+
+
 Changes with version 1.2.0
 
  *) Add support for nesting selector (&)

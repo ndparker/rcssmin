@@ -22,7 +22,7 @@
 
 |**rcssmin**| is a CSS minifier written in python.
 
-.. contents::
+.. xxcontents::
     :local:
 
 
