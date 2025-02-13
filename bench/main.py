@@ -9,7 +9,7 @@ Benchmark cssmin implementations.
 
 :Copyright:
 
- Copyright 2011 - 2024
+ Copyright 2011 - 2025
  Andr\xe9 Malo or his licensors, as applicable
 
 :License:
@@ -47,20 +47,27 @@ if cwd not in _sys.path:
 
 
 import_notes = []
+
+
 class _p_02__rcssmin(object):
     def __init__(self):
         import rcssmin
+
         cssmin = rcssmin._make_cssmin(python_only=True)
         self.cssmin = lambda x: cssmin(x, keep_bang_comments=True)
+
 
 class _p_03__rcssmin(object):
     def __init__(self):
         import _rcssmin
+
         cssmin = _rcssmin.cssmin
         self.cssmin = lambda x: cssmin(x, keep_bang_comments=True)
 
+
 class cssmins(object):
     from bench import cssmin as p_01_cssmin
+
     p_02_rcssmin = _p_02__rcssmin()
     try:
         p_03__rcssmin = _p_03__rcssmin()
@@ -68,12 +75,13 @@ class cssmins(object):
         import_notes.append("_rcssmin (C-Port) not available")
         print(import_notes[-1])
 
+
 print("Python Release: %s" % ".".join(map(str, _sys.version_info[:3])))
 print("")
 
 
 def slurp(filename):
-    """ Load a file """
+    """Load a file"""
     fp = open(filename)
     try:
         return fp.read()
@@ -82,9 +90,9 @@ def slurp(filename):
 
 
 def print_(*value, **kwargs):
-    """ Print stuff """
-    (kwargs.get('file') or _sys.stdout).write(
-        ''.join(value) + kwargs.get('end', '\n')
+    """Print stuff"""
+    (kwargs.get("file") or _sys.stdout).write(
+        "".join(value) + kwargs.get("end", "\n")
     )
 
 
@@ -113,7 +121,7 @@ def bench(filenames, count):
     except NameError:
         cmp = lambda a, b: (a > b) - (a < b)
 
-    ports = [item for item in dir(cssmins) if item.startswith('p_')]
+    ports = [item for item in dir(cssmins) if item.startswith("p_")]
     ports.sort()
     space = max(map(len, ports)) - 4
     ports = [(item[5:], getattr(cssmins, item).cssmin) for item in ports]
@@ -132,31 +140,40 @@ def bench(filenames, count):
                 raise
             except:
                 outputs.append(None)
-        struct.append(dict(
-            filename=filename,
-            sizes=[
-                (item is not None and len(item) or None) for item in outputs
-            ],
-            size=len(style),
-            messages=[],
-            times=[],
-        ))
-        print_("(%.1f KiB)" % (struct[-1]['size'] / 1024.0,))
+        struct.append(
+            dict(
+                filename=filename,
+                sizes=[
+                    (item is not None and len(item) or None)
+                    for item in outputs
+                ],
+                size=len(style),
+                messages=[],
+                times=[],
+            )
+        )
+        print_("(%.1f KiB)" % (struct[-1]["size"] / 1024.0,))
         flush()
         times = []
         for idx, (name, cssmin) in enumerate(ports):
             if outputs[idx] is None:
                 print_("  FAILED %s" % (name,))
-                struct[-1]['times'].append((name, None))
+                struct[-1]["times"].append((name, None))
             else:
-                print_("  Timing %s%s... (%5.1f KiB %s)" % (
-                    name,
-                    " " * (space - len(name)),
-                    len(outputs[idx]) / 1024.0,
-                    idx == 0 and '*' or ['=', '>', '<'][
-                        cmp(len(outputs[idx]), len(outputs[0]))
-                    ],
-                ), end=" ")
+                print_(
+                    "  Timing %s%s... (%5.1f KiB %s)"
+                    % (
+                        name,
+                        " " * (space - len(name)),
+                        len(outputs[idx]) / 1024.0,
+                        idx == 0
+                        and "*"
+                        or ["=", ">", "<"][
+                            cmp(len(outputs[idx]), len(outputs[0]))
+                        ],
+                    ),
+                    end=" ",
+                )
                 flush()
 
                 xcount = count
@@ -167,7 +184,7 @@ def bench(filenames, count):
                         cssmin(style)
                     end = _time.time()
                     result = (end - start) * 1000
-                    if result < 10: # avoid measuring within the error range
+                    if result < 10:  # avoid measuring within the error range
                         xcount *= 10
                         continue
                     times.append(result / xcount)
@@ -178,10 +195,18 @@ def bench(filenames, count):
                 if len(times) <= 1:
                     print_()
                 else:
-                    print_("(factor: %s)" % (', '.join([
-                        '%.2f' % (timed / times[-1]) for timed in times[:-1]
-                    ])))
-                struct[-1]['times'].append((name, times[-1]))
+                    print_(
+                        "(factor: %s)"
+                        % (
+                            ", ".join(
+                                [
+                                    "%.2f" % (timed / times[-1])
+                                    for timed in times[:-1]
+                                ]
+                            )
+                        )
+                    )
+                struct[-1]["times"].append((name, times[-1]))
 
             flush()
         print_()
@@ -190,7 +215,7 @@ def bench(filenames, count):
 
 
 def main(argv=None):
-    """ Main """
+    """Main"""
     import getopt as _getopt
     import os as _os
     import pickle as _pickle
@@ -211,28 +236,32 @@ def main(argv=None):
     for key, value in opts:
         if key in ("-h", "--help"):
             print >> _sys.stderr, (
-                "%s -mbench.main [-c count] [-p file] cssfile ..." % (
-                    _os.path.basename(_sys.executable),
-                )
+                "%s -mbench.main [-c count] [-p file] cssfile ..."
+                % (_os.path.basename(_sys.executable),)
             )
             _sys.exit(0)
-        elif key == '-c':
+        elif key == "-c":
             count = int(value)
-        elif key == '-p':
+        elif key == "-p":
             pickle = str(value)
 
     struct = bench(args, count)
     if pickle:
-        fp = open(pickle, 'wb')
+        fp = open(pickle, "wb")
         try:
-            fp.write(_pickle.dumps((
-                ".".join(map(str, _sys.version_info[:3])),
-                import_notes,
-                struct,
-            ), 0))
+            fp.write(
+                _pickle.dumps(
+                    (
+                        ".".join(map(str, _sys.version_info[:3])),
+                        import_notes,
+                        struct,
+                    ),
+                    0,
+                )
+            )
         finally:
             fp.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
