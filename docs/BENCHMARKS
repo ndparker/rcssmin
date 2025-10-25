@@ -1,151 +1,176 @@
-$ python3.14 -OO bench/main.py bench/*.css
+$ python3.15 -OO bench/main.py bench/*.css
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Python Release: 3.14.0
+Python Release: 3.15.0
 
 Benchmarking 'bench/bootstrap.css'... (142.5 KiB)
-  Timing cssmin   ... (118.8 KiB *)   996.02 ms
-  Timing rcssmin  ... (119.2 KiB >)    31.41 ms (factor: 31.71)
-  Timing _rcssmin ... (119.2 KiB >)     0.42 ms (factor: 2360.26, 74.43)
+  Timing cssmin   ... (118.8 KiB *)   962.48 ms
+  Timing rcssmin  ... (119.2 KiB >)    30.97 ms (factor: 31.07)
+  Timing _rcssmin ... (119.2 KiB >)     0.41 ms (factor: 2350.21, 75.63)
 
 Benchmarking 'bench/bootstrap.min.css'... (118.6 KiB)
-  Timing cssmin   ... (118.5 KiB *)   909.59 ms
-  Timing rcssmin  ... (118.6 KiB >)    14.28 ms (factor: 63.70)
-  Timing _rcssmin ... (118.6 KiB >)     0.28 ms (factor: 3245.58, 50.95)
+  Timing cssmin   ... (118.5 KiB *)   868.46 ms
+  Timing rcssmin  ... (118.6 KiB >)    14.38 ms (factor: 60.41)
+  Timing _rcssmin ... (118.6 KiB >)     0.27 ms (factor: 3200.31, 52.97)
 
 Benchmarking 'bench/wikipedia.css'... (81.0 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    57.39 ms
-  Timing rcssmin  ... ( 49.6 KiB >)    14.37 ms (factor: 3.99)
-  Timing _rcssmin ... ( 49.6 KiB >)     0.26 ms (factor: 222.02, 55.60)
+  Timing cssmin   ... ( 49.4 KiB *)    55.40 ms
+  Timing rcssmin  ... ( 49.6 KiB >)    13.70 ms (factor: 4.04)
+  Timing _rcssmin ... ( 49.6 KiB >)     0.26 ms (factor: 216.67, 53.57)
 
 Benchmarking 'bench/wikipedia.min.css'... (49.4 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    46.63 ms
-  Timing rcssmin  ... ( 49.4 KiB =)     7.18 ms (factor: 6.49)
-  Timing _rcssmin ... ( 49.4 KiB =)     0.16 ms (factor: 300.38, 46.28)
+  Timing cssmin   ... ( 49.4 KiB *)    44.71 ms
+  Timing rcssmin  ... ( 49.4 KiB =)     7.02 ms (factor: 6.37)
+  Timing _rcssmin ... ( 49.4 KiB =)     0.15 ms (factor: 294.17, 46.19)
+
+
+$ python3.14 -OO bench/main.py bench/*.css
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Python Release: 3.14.4
+
+Benchmarking 'bench/bootstrap.css'... (142.5 KiB)
+  Timing cssmin   ... (118.8 KiB *)   962.93 ms
+  Timing rcssmin  ... (119.2 KiB >)    31.02 ms (factor: 31.04)
+  Timing _rcssmin ... (119.2 KiB >)     0.41 ms (factor: 2335.03, 75.23)
+
+Benchmarking 'bench/bootstrap.min.css'... (118.6 KiB)
+  Timing cssmin   ... (118.5 KiB *)   869.44 ms
+  Timing rcssmin  ... (118.6 KiB >)    13.90 ms (factor: 62.53)
+  Timing _rcssmin ... (118.6 KiB >)     0.27 ms (factor: 3182.76, 50.90)
+
+Benchmarking 'bench/wikipedia.css'... (81.0 KiB)
+  Timing cssmin   ... ( 49.4 KiB *)    56.11 ms
+  Timing rcssmin  ... ( 49.6 KiB >)    13.93 ms (factor: 4.03)
+  Timing _rcssmin ... ( 49.6 KiB >)     0.25 ms (factor: 220.55, 54.74)
+
+Benchmarking 'bench/wikipedia.min.css'... (49.4 KiB)
+  Timing cssmin   ... ( 49.4 KiB *)    45.49 ms
+  Timing rcssmin  ... ( 49.4 KiB =)     6.91 ms (factor: 6.58)
+  Timing _rcssmin ... ( 49.4 KiB =)     0.15 ms (factor: 299.23, 45.45)
 
 
 $ python3.13 -OO bench/main.py bench/*.css
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Python Release: 3.13.5
+Python Release: 3.13.13
 
 Benchmarking 'bench/bootstrap.css'... (142.5 KiB)
-  Timing cssmin   ... (118.8 KiB *)   988.62 ms
-  Timing rcssmin  ... (119.2 KiB >)    32.53 ms (factor: 30.39)
-  Timing _rcssmin ... (119.2 KiB >)     0.46 ms (factor: 2156.68, 70.97)
+  Timing cssmin   ... (118.8 KiB *)   933.59 ms
+  Timing rcssmin  ... (119.2 KiB >)    31.46 ms (factor: 29.68)
+  Timing _rcssmin ... (119.2 KiB >)     0.45 ms (factor: 2097.90, 70.69)
 
 Benchmarking 'bench/bootstrap.min.css'... (118.6 KiB)
-  Timing cssmin   ... (118.5 KiB *)   899.00 ms
-  Timing rcssmin  ... (118.6 KiB >)    14.37 ms (factor: 62.55)
-  Timing _rcssmin ... (118.6 KiB >)     0.28 ms (factor: 3201.69, 51.18)
+  Timing cssmin   ... (118.5 KiB *)   843.56 ms
+  Timing rcssmin  ... (118.6 KiB >)    14.30 ms (factor: 58.98)
+  Timing _rcssmin ... (118.6 KiB >)     0.28 ms (factor: 3059.10, 51.86)
 
 Benchmarking 'bench/wikipedia.css'... (81.0 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    56.92 ms
-  Timing rcssmin  ... ( 49.6 KiB >)    14.11 ms (factor: 4.03)
-  Timing _rcssmin ... ( 49.6 KiB >)     0.26 ms (factor: 222.29, 55.09)
+  Timing cssmin   ... ( 49.4 KiB *)    54.11 ms
+  Timing rcssmin  ... ( 49.6 KiB >)    13.66 ms (factor: 3.96)
+  Timing _rcssmin ... ( 49.6 KiB >)     0.26 ms (factor: 211.39, 53.35)
 
 Benchmarking 'bench/wikipedia.min.css'... (49.4 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    46.34 ms
-  Timing rcssmin  ... ( 49.4 KiB =)     7.11 ms (factor: 6.52)
-  Timing _rcssmin ... ( 49.4 KiB =)     0.16 ms (factor: 298.16, 45.72)
+  Timing cssmin   ... ( 49.4 KiB *)    44.00 ms
+  Timing rcssmin  ... ( 49.4 KiB =)     6.92 ms (factor: 6.35)
+  Timing _rcssmin ... ( 49.4 KiB =)     0.17 ms (factor: 252.07, 39.67)
 
 
 $ python3.12 -OO bench/main.py bench/*.css
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Python Release: 3.12.11
+Python Release: 3.12.13
 
 Benchmarking 'bench/bootstrap.css'... (142.5 KiB)
-  Timing cssmin   ... (118.8 KiB *)   990.79 ms
-  Timing rcssmin  ... (119.2 KiB >)    31.43 ms (factor: 31.52)
-  Timing _rcssmin ... (119.2 KiB >)     0.43 ms (factor: 2329.03, 73.89)
+  Timing cssmin   ... (118.8 KiB *)   968.62 ms
+  Timing rcssmin  ... (119.2 KiB >)    35.14 ms (factor: 27.56)
+  Timing _rcssmin ... (119.2 KiB >)     0.44 ms (factor: 2183.62, 79.23)
 
 Benchmarking 'bench/bootstrap.min.css'... (118.6 KiB)
-  Timing cssmin   ... (118.5 KiB *)   893.41 ms
-  Timing rcssmin  ... (118.6 KiB >)    14.15 ms (factor: 63.15)
-  Timing _rcssmin ... (118.6 KiB >)     0.28 ms (factor: 3187.41, 50.47)
+  Timing cssmin   ... (118.5 KiB *)   863.60 ms
+  Timing rcssmin  ... (118.6 KiB >)    15.88 ms (factor: 54.39)
+  Timing _rcssmin ... (118.6 KiB >)     0.28 ms (factor: 3117.05, 57.31)
 
 Benchmarking 'bench/wikipedia.css'... (81.0 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    57.10 ms
-  Timing rcssmin  ... ( 49.6 KiB >)    13.90 ms (factor: 4.11)
-  Timing _rcssmin ... ( 49.6 KiB >)     0.26 ms (factor: 222.84, 54.25)
+  Timing cssmin   ... ( 49.4 KiB *)    56.37 ms
+  Timing rcssmin  ... ( 49.6 KiB >)    15.50 ms (factor: 3.64)
+  Timing _rcssmin ... ( 49.6 KiB >)     0.26 ms (factor: 219.90, 60.47)
 
 Benchmarking 'bench/wikipedia.min.css'... (49.4 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    46.46 ms
-  Timing rcssmin  ... ( 49.4 KiB =)     7.02 ms (factor: 6.62)
-  Timing _rcssmin ... ( 49.4 KiB =)     0.16 ms (factor: 299.67, 45.27)
+  Timing cssmin   ... ( 49.4 KiB *)    45.38 ms
+  Timing rcssmin  ... ( 49.4 KiB =)     7.86 ms (factor: 5.77)
+  Timing _rcssmin ... ( 49.4 KiB =)     0.15 ms (factor: 296.05, 51.30)
 
 
 $ python3.11 -OO bench/main.py bench/*.css
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Python Release: 3.11.13
+Python Release: 3.11.15
 
 Benchmarking 'bench/bootstrap.css'... (142.5 KiB)
-  Timing cssmin   ... (118.8 KiB *)  1011.71 ms
-  Timing rcssmin  ... (119.2 KiB >)    29.43 ms (factor: 34.38)
-  Timing _rcssmin ... (119.2 KiB >)     0.46 ms (factor: 2180.52, 63.43)
+  Timing cssmin   ... (118.8 KiB *)  1011.98 ms
+  Timing rcssmin  ... (119.2 KiB >)    27.39 ms (factor: 36.95)
+  Timing _rcssmin ... (119.2 KiB >)     0.42 ms (factor: 2396.03, 64.84)
 
 Benchmarking 'bench/bootstrap.min.css'... (118.6 KiB)
-  Timing cssmin   ... (118.5 KiB *)   901.72 ms
-  Timing rcssmin  ... (118.6 KiB >)    13.68 ms (factor: 65.90)
-  Timing _rcssmin ... (118.6 KiB >)     0.31 ms (factor: 2917.48, 44.27)
+  Timing cssmin   ... (118.5 KiB *)   908.33 ms
+  Timing rcssmin  ... (118.6 KiB >)    12.74 ms (factor: 71.31)
+  Timing _rcssmin ... (118.6 KiB >)     0.28 ms (factor: 3245.29, 45.51)
 
 Benchmarking 'bench/wikipedia.css'... (81.0 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    60.04 ms
-  Timing rcssmin  ... ( 49.6 KiB >)    13.19 ms (factor: 4.55)
-  Timing _rcssmin ... ( 49.6 KiB >)     0.27 ms (factor: 220.33, 48.39)
+  Timing cssmin   ... ( 49.4 KiB *)    60.20 ms
+  Timing rcssmin  ... ( 49.6 KiB >)    12.51 ms (factor: 4.81)
+  Timing _rcssmin ... ( 49.6 KiB >)     0.26 ms (factor: 230.55, 47.93)
 
 Benchmarking 'bench/wikipedia.min.css'... (49.4 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    47.00 ms
-  Timing rcssmin  ... ( 49.4 KiB =)     6.78 ms (factor: 6.93)
-  Timing _rcssmin ... ( 49.4 KiB =)     0.17 ms (factor: 279.48, 40.33)
+  Timing cssmin   ... ( 49.4 KiB *)    47.43 ms
+  Timing rcssmin  ... ( 49.4 KiB =)     6.36 ms (factor: 7.46)
+  Timing _rcssmin ... ( 49.4 KiB =)     0.16 ms (factor: 304.86, 40.88)
 
 
 $ python3.10 -OO bench/main.py bench/*.css
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Python Release: 3.10.18
+Python Release: 3.10.20
 
 Benchmarking 'bench/bootstrap.css'... (142.5 KiB)
-  Timing cssmin   ... (118.8 KiB *)  1106.42 ms
-  Timing rcssmin  ... (119.2 KiB >)    31.67 ms (factor: 34.94)
-  Timing _rcssmin ... (119.2 KiB >)     0.47 ms (factor: 2344.06, 67.09)
+  Timing cssmin   ... (118.8 KiB *)  1101.67 ms
+  Timing rcssmin  ... (119.2 KiB >)    31.56 ms (factor: 34.91)
+  Timing _rcssmin ... (119.2 KiB >)     0.42 ms (factor: 2594.07, 74.31)
 
 Benchmarking 'bench/bootstrap.min.css'... (118.6 KiB)
-  Timing cssmin   ... (118.5 KiB *)   997.61 ms
-  Timing rcssmin  ... (118.6 KiB >)    15.15 ms (factor: 65.87)
-  Timing _rcssmin ... (118.6 KiB >)     0.32 ms (factor: 3161.18, 47.99)
+  Timing cssmin   ... (118.5 KiB *)   992.59 ms
+  Timing rcssmin  ... (118.6 KiB >)    14.35 ms (factor: 69.15)
+  Timing _rcssmin ... (118.6 KiB >)     0.28 ms (factor: 3573.59, 51.68)
 
 Benchmarking 'bench/wikipedia.css'... (81.0 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    65.19 ms
-  Timing rcssmin  ... ( 49.6 KiB >)    14.28 ms (factor: 4.56)
-  Timing _rcssmin ... ( 49.6 KiB >)     0.28 ms (factor: 233.19, 51.09)
+  Timing cssmin   ... ( 49.4 KiB *)    64.43 ms
+  Timing rcssmin  ... ( 49.6 KiB >)    14.26 ms (factor: 4.52)
+  Timing _rcssmin ... ( 49.6 KiB >)     0.26 ms (factor: 248.26, 54.93)
 
 Benchmarking 'bench/wikipedia.min.css'... (49.4 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    51.22 ms
-  Timing rcssmin  ... ( 49.4 KiB =)     7.39 ms (factor: 6.93)
-  Timing _rcssmin ... ( 49.4 KiB =)     0.17 ms (factor: 303.35, 43.76)
+  Timing cssmin   ... ( 49.4 KiB *)    50.59 ms
+  Timing rcssmin  ... ( 49.4 KiB =)     7.18 ms (factor: 7.05)
+  Timing _rcssmin ... ( 49.4 KiB =)     0.15 ms (factor: 327.81, 46.52)
 
 
 $ python3.9 -OO bench/main.py bench/*.css
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Python Release: 3.9.23
+Python Release: 3.9.25
 
 Benchmarking 'bench/bootstrap.css'... (142.5 KiB)
-  Timing cssmin   ... (118.8 KiB *)  1104.47 ms
-  Timing rcssmin  ... (119.2 KiB >)    29.65 ms (factor: 37.25)
-  Timing _rcssmin ... (119.2 KiB >)     0.46 ms (factor: 2405.44, 64.58)
+  Timing cssmin   ... (118.8 KiB *)  1111.69 ms
+  Timing rcssmin  ... (119.2 KiB >)    29.42 ms (factor: 37.78)
+  Timing _rcssmin ... (119.2 KiB >)     0.40 ms (factor: 2776.60, 73.49)
 
 Benchmarking 'bench/bootstrap.min.css'... (118.6 KiB)
-  Timing cssmin   ... (118.5 KiB *)   994.09 ms
-  Timing rcssmin  ... (118.6 KiB >)    14.50 ms (factor: 68.58)
-  Timing _rcssmin ... (118.6 KiB >)     0.31 ms (factor: 3215.73, 46.89)
+  Timing cssmin   ... (118.5 KiB *)  1001.20 ms
+  Timing rcssmin  ... (118.6 KiB >)    13.70 ms (factor: 73.10)
+  Timing _rcssmin ... (118.6 KiB >)     0.26 ms (factor: 3807.02, 52.08)
 
 Benchmarking 'bench/wikipedia.css'... (81.0 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    64.73 ms
-  Timing rcssmin  ... ( 49.6 KiB >)    13.17 ms (factor: 4.91)
-  Timing _rcssmin ... ( 49.6 KiB >)     0.27 ms (factor: 238.72, 48.59)
+  Timing cssmin   ... ( 49.4 KiB *)    64.41 ms
+  Timing rcssmin  ... ( 49.6 KiB >)    13.02 ms (factor: 4.95)
+  Timing _rcssmin ... ( 49.6 KiB >)     0.25 ms (factor: 257.42, 52.02)
 
 Benchmarking 'bench/wikipedia.min.css'... (49.4 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    51.25 ms
-  Timing rcssmin  ... ( 49.4 KiB =)     6.82 ms (factor: 7.51)
-  Timing _rcssmin ... ( 49.4 KiB =)     0.17 ms (factor: 304.62, 40.55)
+  Timing cssmin   ... ( 49.4 KiB *)    50.85 ms
+  Timing rcssmin  ... ( 49.4 KiB =)     6.68 ms (factor: 7.61)
+  Timing _rcssmin ... ( 49.4 KiB =)     0.15 ms (factor: 343.06, 45.09)
 
 
 $ python3.8 -OO bench/main.py bench/*.css
@@ -153,24 +178,24 @@ $ python3.8 -OO bench/main.py bench/*.css
 Python Release: 3.8.20
 
 Benchmarking 'bench/bootstrap.css'... (142.5 KiB)
-  Timing cssmin   ... (118.8 KiB *)  1104.85 ms
-  Timing rcssmin  ... (119.2 KiB >)    30.12 ms (factor: 36.68)
-  Timing _rcssmin ... (119.2 KiB >)     0.45 ms (factor: 2440.91, 66.55)
+  Timing cssmin   ... (118.8 KiB *)  1102.13 ms
+  Timing rcssmin  ... (119.2 KiB >)    29.69 ms (factor: 37.12)
+  Timing _rcssmin ... (119.2 KiB >)     0.40 ms (factor: 2724.29, 73.40)
 
 Benchmarking 'bench/bootstrap.min.css'... (118.6 KiB)
-  Timing cssmin   ... (118.5 KiB *)   994.30 ms
-  Timing rcssmin  ... (118.6 KiB >)    13.76 ms (factor: 72.26)
-  Timing _rcssmin ... (118.6 KiB >)     0.27 ms (factor: 3661.99, 50.68)
+  Timing cssmin   ... (118.5 KiB *)   992.74 ms
+  Timing rcssmin  ... (118.6 KiB >)    13.92 ms (factor: 71.33)
+  Timing _rcssmin ... (118.6 KiB >)     0.25 ms (factor: 3896.31, 54.63)
 
 Benchmarking 'bench/wikipedia.css'... (81.0 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    64.99 ms
-  Timing rcssmin  ... ( 49.6 KiB >)    13.52 ms (factor: 4.81)
-  Timing _rcssmin ... ( 49.6 KiB >)     0.26 ms (factor: 251.48, 52.31)
+  Timing cssmin   ... ( 49.4 KiB *)    64.60 ms
+  Timing rcssmin  ... ( 49.6 KiB >)    13.68 ms (factor: 4.72)
+  Timing _rcssmin ... ( 49.6 KiB >)     0.25 ms (factor: 257.08, 54.43)
 
 Benchmarking 'bench/wikipedia.min.css'... (49.4 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    51.76 ms
-  Timing rcssmin  ... ( 49.4 KiB =)     6.86 ms (factor: 7.55)
-  Timing _rcssmin ... ( 49.4 KiB =)     0.16 ms (factor: 332.83, 44.10)
+  Timing cssmin   ... ( 49.4 KiB *)    50.47 ms
+  Timing rcssmin  ... ( 49.4 KiB =)     6.81 ms (factor: 7.41)
+  Timing _rcssmin ... ( 49.4 KiB =)     0.15 ms (factor: 346.32, 46.72)
 
 
 $ python3.7 -OO bench/main.py bench/*.css
@@ -178,24 +203,24 @@ $ python3.7 -OO bench/main.py bench/*.css
 Python Release: 3.7.13
 
 Benchmarking 'bench/bootstrap.css'... (142.5 KiB)
-  Timing cssmin   ... (118.8 KiB *)  1157.61 ms
-  Timing rcssmin  ... (119.2 KiB >)    30.46 ms (factor: 38.00)
-  Timing _rcssmin ... (119.2 KiB >)     0.42 ms (factor: 2738.71, 72.07)
+  Timing cssmin   ... (118.8 KiB *)  1153.17 ms
+  Timing rcssmin  ... (119.2 KiB >)    30.08 ms (factor: 38.34)
+  Timing _rcssmin ... (119.2 KiB >)     0.44 ms (factor: 2626.92, 68.52)
 
 Benchmarking 'bench/bootstrap.min.css'... (118.6 KiB)
-  Timing cssmin   ... (118.5 KiB *)  1039.66 ms
-  Timing rcssmin  ... (118.6 KiB >)    14.17 ms (factor: 73.38)
-  Timing _rcssmin ... (118.6 KiB >)     0.27 ms (factor: 3891.31, 53.03)
+  Timing cssmin   ... (118.5 KiB *)  1037.13 ms
+  Timing rcssmin  ... (118.6 KiB >)    14.23 ms (factor: 72.90)
+  Timing _rcssmin ... (118.6 KiB >)     0.30 ms (factor: 3445.57, 47.26)
 
 Benchmarking 'bench/wikipedia.css'... (81.0 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    67.51 ms
-  Timing rcssmin  ... ( 49.6 KiB >)    13.61 ms (factor: 4.96)
-  Timing _rcssmin ... ( 49.6 KiB >)     0.26 ms (factor: 263.53, 53.13)
+  Timing cssmin   ... ( 49.4 KiB *)    66.94 ms
+  Timing rcssmin  ... ( 49.6 KiB >)    13.70 ms (factor: 4.89)
+  Timing _rcssmin ... ( 49.6 KiB >)     0.27 ms (factor: 249.73, 51.11)
 
 Benchmarking 'bench/wikipedia.min.css'... (49.4 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    53.61 ms
-  Timing rcssmin  ... ( 49.4 KiB =)     7.31 ms (factor: 7.33)
-  Timing _rcssmin ... ( 49.4 KiB =)     0.18 ms (factor: 292.91, 39.93)
+  Timing cssmin   ... ( 49.4 KiB *)    52.98 ms
+  Timing rcssmin  ... ( 49.4 KiB =)     6.96 ms (factor: 7.61)
+  Timing _rcssmin ... ( 49.4 KiB =)     0.16 ms (factor: 322.84, 42.43)
 
 
 $ python3.6 -OO bench/main.py bench/*.css
@@ -203,49 +228,24 @@ $ python3.6 -OO bench/main.py bench/*.css
 Python Release: 3.6.15
 
 Benchmarking 'bench/bootstrap.css'... (142.5 KiB)
-  Timing cssmin   ... (118.8 KiB *)  1104.08 ms
-  Timing rcssmin  ... (119.2 KiB >)    32.14 ms (factor: 34.35)
-  Timing _rcssmin ... (119.2 KiB >)     0.44 ms (factor: 2520.37, 73.37)
+  Timing cssmin   ... (118.8 KiB *)  1145.67 ms
+  Timing rcssmin  ... (119.2 KiB >)    33.55 ms (factor: 34.15)
+  Timing _rcssmin ... (119.2 KiB >)     0.40 ms (factor: 2877.62, 84.27)
 
 Benchmarking 'bench/bootstrap.min.css'... (118.6 KiB)
-  Timing cssmin   ... (118.5 KiB *)   989.83 ms
-  Timing rcssmin  ... (118.6 KiB >)    15.32 ms (factor: 64.63)
-  Timing _rcssmin ... (118.6 KiB >)     0.29 ms (factor: 3403.45, 52.66)
+  Timing cssmin   ... (118.5 KiB *)  1032.59 ms
+  Timing rcssmin  ... (118.6 KiB >)    15.51 ms (factor: 66.58)
+  Timing _rcssmin ... (118.6 KiB >)     0.26 ms (factor: 3966.68, 59.58)
 
 Benchmarking 'bench/wikipedia.css'... (81.0 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    67.84 ms
-  Timing rcssmin  ... ( 49.6 KiB >)    14.89 ms (factor: 4.56)
-  Timing _rcssmin ... ( 49.6 KiB >)     0.27 ms (factor: 253.57, 55.65)
+  Timing cssmin   ... ( 49.4 KiB *)    68.82 ms
+  Timing rcssmin  ... ( 49.6 KiB >)    14.73 ms (factor: 4.67)
+  Timing _rcssmin ... ( 49.6 KiB >)     0.25 ms (factor: 270.74, 57.95)
 
 Benchmarking 'bench/wikipedia.min.css'... (49.4 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    53.23 ms
-  Timing rcssmin  ... ( 49.4 KiB =)     7.52 ms (factor: 7.08)
-  Timing _rcssmin ... ( 49.4 KiB =)     0.16 ms (factor: 323.44, 45.71)
-
-
-$ python2.7 -OO bench/main.py bench/*.css
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Python Release: 2.7.18
-
-Benchmarking 'bench/bootstrap.css'... (142.5 KiB)
-  Timing cssmin   ... (118.8 KiB *)  1139.89 ms
-  Timing rcssmin  ... (119.2 KiB >)    30.39 ms (factor: 37.50)
-  Timing _rcssmin ... (119.2 KiB >)     0.48 ms (factor: 2378.90, 63.43)
-
-Benchmarking 'bench/bootstrap.min.css'... (118.6 KiB)
-  Timing cssmin   ... (118.5 KiB *)  1024.84 ms
-  Timing rcssmin  ... (118.6 KiB >)    13.70 ms (factor: 74.80)
-  Timing _rcssmin ... (118.6 KiB >)     0.36 ms (factor: 2840.37, 37.97)
-
-Benchmarking 'bench/wikipedia.css'... (81.0 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    66.33 ms
-  Timing rcssmin  ... ( 49.6 KiB >)    13.36 ms (factor: 4.96)
-  Timing _rcssmin ... ( 49.6 KiB >)     0.24 ms (factor: 278.60, 56.12)
-
-Benchmarking 'bench/wikipedia.min.css'... (49.4 KiB)
-  Timing cssmin   ... ( 49.4 KiB *)    53.54 ms
-  Timing rcssmin  ... ( 49.4 KiB =)     6.62 ms (factor: 8.08)
-  Timing _rcssmin ... ( 49.4 KiB =)     0.16 ms (factor: 345.21, 42.71)
+  Timing cssmin   ... ( 49.4 KiB *)    54.57 ms
+  Timing rcssmin  ... ( 49.4 KiB =)     7.54 ms (factor: 7.24)
+  Timing _rcssmin ... ( 49.4 KiB =)     0.15 ms (factor: 356.99, 49.30)
 
 
 # vim: nowrap
