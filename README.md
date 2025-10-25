@@ -68,7 +68,7 @@ distribution contains the details.
 
 ## COPYRIGHT AND LICENSE
 
-Copyright 2011 - 2025
+Copyright 2011 - 2026
 André Malo or his licensors, as applicable.
 
 The whole package (except for the files in the bench/ directory)
@@ -79,7 +79,7 @@ root directory of the distribution or online at:
 
 ## SYSTEM REQUIREMENTS
 
-Supported python versions are 2.7 and 3.6+.
+Supported python versions are 3.6 and above.
 
 You also need a build environment for python C extensions (i.e. a compiler
 and the python development files).
